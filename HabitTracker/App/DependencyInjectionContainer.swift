@@ -38,8 +38,8 @@ final class DependencyInjectionContainer {
 
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [
-            UINavigationController(rootViewController: trackerVC),
-            UINavigationController(rootViewController: statsVC)
+            trackerVC,
+            statsVC
         ]
         return tabBarController
     }

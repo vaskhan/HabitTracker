@@ -7,12 +7,11 @@
 
 import UIKit
 
-final class TrackerScreenController: UIViewController {
+final class TrackerScreenController: UIViewController, UICollectionViewDelegate {
     
     private let viewModel: TrackerViewModel
     
     // MARK: - UI Elements
-    
     private let addTrackerButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "buttonAddingLogo")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -23,6 +22,7 @@ final class TrackerScreenController: UIViewController {
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
         return picker
     }()
@@ -58,7 +58,6 @@ final class TrackerScreenController: UIViewController {
     }()
     
     // MARK: - Stacks
-    
     private lazy var topControlsStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [addTrackerButton, datePicker])
         stack.axis = .horizontal
@@ -67,8 +66,25 @@ final class TrackerScreenController: UIViewController {
         return stack
     }()
     
-    // MARK: - Init
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.register(TrackerCell.self, forCellWithReuseIdentifier: "TrackerCell")
+        collectionView.register(SectionHeaderView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: "SectionHeader")
+        return collectionView
+    }()
     
+    private var selectedDate: Date {
+        Calendar.current.startOfDay(for: datePicker.date)
+    }
+    
+    // MARK: - Init
     init(viewModel: TrackerViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -79,18 +95,34 @@ final class TrackerScreenController: UIViewController {
     }
     
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         setupElements()
+        
+        viewModel.categories = [
+            TrackerCategory(title: "Домашний уют", trackers: [
+                Tracker(
+                    id: UUID(),
+                    name: "Поливать растения",
+                    color: .testCellColorGreen,
+                    emoji: "🥴",
+                    schedule: DayOfWeek.allCases
+                )
+            ])
+        ]
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
     }
     
+    @objc private func dateChanged() {
+        collectionView.reloadData()
+        view.endEditing(true)
+    }
+
     // MARK: - Setup
-    
     private func setupElements() {
-        [topControlsStack, titleLabel, searchBar, backLogo, underLogoLabel].forEach {
+        [topControlsStack, titleLabel, searchBar, backLogo, underLogoLabel, collectionView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -99,7 +131,7 @@ final class TrackerScreenController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Top controls: кнопка + пикер
+            // кнопка + пикер
             topControlsStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             topControlsStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 6),
             topControlsStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
@@ -127,7 +159,113 @@ final class TrackerScreenController: UIViewController {
             
             // Подпись под лого
             underLogoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            underLogoLabel.topAnchor.constraint(equalTo: backLogo.bottomAnchor, constant: 8)
+            underLogoLabel.topAnchor.constraint(equalTo: backLogo.bottomAnchor, constant: 8),
+            
+            
+            collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 24),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            
+            
         ])
     }
 }
+
+extension TrackerScreenController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return viewModel.categories.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        let total = (0..<viewModel.numberOfSections()).reduce(0) { $0 + viewModel.numberOfItems(in: $1) }
+        backLogo.isHidden = total > 0
+        underLogoLabel.isHidden = total > 0 
+        
+        
+        return viewModel.numberOfItems(in: section)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCell", for: indexPath) as? TrackerCell else {
+            return UICollectionViewCell()
+        }
+        
+        let tracker = viewModel.tracker(at: indexPath)
+        let completedDays = viewModel.completedDays(for: tracker.id)
+        let isCompleted = viewModel.isTrackerCompleted(tracker.id, on: selectedDate)
+
+        cell.configure(with: tracker, completedDays: completedDays, isCompletedToday: isCompleted)
+
+        cell.onPlusButtonTapped = { [weak self] in
+            guard let self = self else { return }
+
+            let today = Calendar.current.startOfDay(for: Date())
+            guard self.selectedDate <= today else { return }
+
+            self.viewModel.toggleTrackerCompletion(trackerID: tracker.id, on: self.selectedDate)
+            if let cell = self.collectionView.cellForItem(at: indexPath) as? TrackerCell {
+                let completedDays = self.viewModel.completedDays(for: tracker.id)
+                let isCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.selectedDate)
+                cell.updateState(isCompletedToday: isCompleted, completedDays: completedDays)
+            }
+        }
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+        
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: "SectionHeader",
+            for: indexPath
+        ) as! SectionHeaderView
+        
+        let title = viewModel.titleForSection(indexPath.section)
+        header.configure(with: title)
+        return header
+    }
+}
+
+extension TrackerScreenController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let spacing: CGFloat = 8
+        let width = (collectionView.bounds.width - spacing) / 2
+        return CGSize(width: width, height: 148)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 8
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 30)
+    }
+    
+}
+
