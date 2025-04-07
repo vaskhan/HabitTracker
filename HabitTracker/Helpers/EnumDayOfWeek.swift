@@ -41,3 +41,10 @@ extension DayOfWeek {
         }
     }
 }
+
+extension DayOfWeek {
+    static func fromSystemWeekday(_ systemWeekday: Int) -> DayOfWeek? {
+        let shifted = (systemWeekday + 5) % 7 + 1
+        return DayOfWeek(rawValue: shifted)
+    }
+}

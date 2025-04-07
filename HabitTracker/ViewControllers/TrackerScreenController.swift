@@ -101,25 +101,27 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         view.backgroundColor = .white
         setupElements()
         
-        viewModel.categories = [
-            TrackerCategory(title: "Домашний уют", trackers: [
-                Tracker(
-                    id: UUID(),
-                    name: "Поливать растения",
-                    color: .testCellColorGreen,
-                    emoji: "🥴",
-                    schedule: DayOfWeek.allCases
-                )
-            ])
-        ]
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+        addTrackerButton.addTarget(self, action: #selector(didTapAddTracker), for: .touchUpInside)
+        
     }
     
     @objc private func dateChanged() {
         collectionView.reloadData()
-        view.endEditing(true)
     }
-
+    
+    @objc private func didTapAddTracker() {
+        let createTrackerSelection = TrackerSelectionViewController()
+        createTrackerSelection.onCreateTracker = { [weak self] newCategory in
+            guard let self = self else { return }
+            for tracker in newCategory.trackers {
+                self.viewModel.addTracker(tracker, toCategoryWithTitle: newCategory.title)
+            }
+            self.collectionView.reloadData()
+        }
+        presentSheet(createTrackerSelection)
+    }
+    
     // MARK: - Setup
     private func setupElements() {
         [topControlsStack, titleLabel, searchBar, backLogo, underLogoLabel, collectionView].forEach {
@@ -174,17 +176,16 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
 
 extension TrackerScreenController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return viewModel.categories.count
+        viewModel.numberOfSections(for: selectedDate)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let total = viewModel.totalVisibleTrackers(for: selectedDate)
         
-        let total = (0..<viewModel.numberOfSections()).reduce(0) { $0 + viewModel.numberOfItems(in: $1) }
         backLogo.isHidden = total > 0
-        underLogoLabel.isHidden = total > 0 
+        underLogoLabel.isHidden = total > 0
         
-        
-        return viewModel.numberOfItems(in: section)
+        return viewModel.numberOfItems(in: section, for: selectedDate)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -192,23 +193,23 @@ extension TrackerScreenController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let tracker = viewModel.tracker(at: indexPath)
+        let tracker = viewModel.tracker(at: indexPath, for: selectedDate)
         let completedDays = viewModel.completedDays(for: tracker.id)
         let isCompleted = viewModel.isTrackerCompleted(tracker.id, on: selectedDate)
-
+        
         cell.configure(with: tracker, completedDays: completedDays, isCompletedToday: isCompleted)
-
+        
         cell.onPlusButtonTapped = { [weak self] in
             guard let self = self else { return }
-
+            
             let today = Calendar.current.startOfDay(for: Date())
             guard self.selectedDate <= today else { return }
-
+            
             self.viewModel.toggleTrackerCompletion(trackerID: tracker.id, on: self.selectedDate)
             if let cell = self.collectionView.cellForItem(at: indexPath) as? TrackerCell {
-                let completedDays = self.viewModel.completedDays(for: tracker.id)
-                let isCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.selectedDate)
-                cell.updateState(isCompletedToday: isCompleted, completedDays: completedDays)
+                let updatedCompletedDays = self.viewModel.completedDays(for: tracker.id)
+                let updatedIsCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.selectedDate)
+                cell.updateState(isCompletedToday: updatedIsCompleted, completedDays: updatedCompletedDays)
             }
         }
         
@@ -228,7 +229,7 @@ extension TrackerScreenController: UICollectionViewDataSource {
             for: indexPath
         ) as! SectionHeaderView
         
-        let title = viewModel.titleForSection(indexPath.section)
+        let title = viewModel.sectionTitle(for: indexPath.section, date: selectedDate)
         header.configure(with: title)
         return header
     }
