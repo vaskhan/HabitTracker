@@ -34,6 +34,7 @@ final class CreateEventViewController: UIViewController {
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
+        field.clearButtonMode = .whileEditing
         return field
     }()
     
@@ -107,6 +108,7 @@ final class CreateEventViewController: UIViewController {
         nameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
+        enableHideKeyboardOnTap()
     }
     
     // MARK: - Private Methods

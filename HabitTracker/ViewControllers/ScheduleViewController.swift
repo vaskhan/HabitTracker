@@ -88,13 +88,15 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let day = DayOfWeek(rawValue: indexPath.row + 1) else { return UITableViewCell() }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as! ScheduleCell
+        guard let day = DayOfWeek(rawValue: indexPath.row + 1),
+              let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleCell", for: indexPath) as? ScheduleCell else {
+            return UITableViewCell()
+        }
+
         let isOn = selectedDays.contains(day)
-        
         let isFirst = indexPath.row == 0
         let isLast = indexPath.row == DayOfWeek.allCases.count - 1
-        
+
         cell.configure(day: day.fullNameDay, isOn: isOn, isLast: isLast) { [weak self] isSelected in
             if isSelected {
                 self?.selectedDays.insert(day)
@@ -102,6 +104,7 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
                 self?.selectedDays.remove(day)
             }
         }
+
         cell.settingsCorners(isFirst: isFirst, isLast: isLast)
         return cell
     }

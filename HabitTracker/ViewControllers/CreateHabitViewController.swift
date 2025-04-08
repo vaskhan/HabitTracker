@@ -44,6 +44,7 @@ final class CreateHabitViewController: UIViewController {
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
+        field.clearButtonMode = .whileEditing
         return field
     }()
     
@@ -88,7 +89,6 @@ final class CreateHabitViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -98,10 +98,10 @@ final class CreateHabitViewController: UIViewController {
         updateCategoryUI()
         updateCreateButtonState()
         nameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        enableHideKeyboardOnTap()
     }
     
     // MARK: - Setup
-    
     private func setupUI() {
         [titleLabel, nameField, optionContainerView, cancelButton, createButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false

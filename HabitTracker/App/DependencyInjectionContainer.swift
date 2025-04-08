@@ -32,13 +32,15 @@ final class DependencyInjectionContainer {
     // MARK: - TabBarController
     func makeTabBarController() -> UITabBarController {
         let trackerVC = makeTrackerScreenController()
-        trackerVC.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "trackertLogoTabBar"), tag: 0)
-        
+        let trackerNav = UINavigationController(rootViewController: trackerVC)
+        trackerNav.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "trackertLogoTabBar"), tag: 0)
+
         let statsVC = makeStatisticScreenController()
-        statsVC.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "statisticLogoTabBar"), tag: 1)
-        
+        let statsNav = UINavigationController(rootViewController: statsVC)
+        statsNav.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "statisticLogoTabBar"), tag: 1)
+
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [trackerVC, statsVC]
+        tabBarController.viewControllers = [trackerNav, statsNav]
         
         let topLine = UIView()
         topLine.backgroundColor = UIColor.grayText

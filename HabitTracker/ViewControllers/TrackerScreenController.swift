@@ -57,15 +57,6 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         return label
     }()
     
-    // MARK: - Stacks
-    private lazy var topControlsStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [addTrackerButton, datePicker])
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .equalSpacing
-        return stack
-    }()
-    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -80,7 +71,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         return collectionView
     }()
     
-    private var selectedDate: Date {
+    private var currentDate: Date {
         Calendar.current.startOfDay(for: datePicker.date)
     }
     
@@ -104,6 +95,8 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         addTrackerButton.addTarget(self, action: #selector(didTapAddTracker), for: .touchUpInside)
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
     @objc private func dateChanged() {
@@ -124,7 +117,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     // MARK: - Setup
     private func setupElements() {
-        [topControlsStack, titleLabel, searchBar, backLogo, underLogoLabel, collectionView].forEach {
+        [titleLabel, searchBar, backLogo, underLogoLabel, collectionView].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -133,18 +126,8 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // кнопка + пикер
-            topControlsStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
-            topControlsStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 6),
-            topControlsStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            datePicker.topAnchor.constraint(equalTo: topControlsStack.topAnchor, constant: 4),
-            datePicker.bottomAnchor.constraint(equalTo: topControlsStack.bottomAnchor, constant: 4),
-            
-            addTrackerButton.widthAnchor.constraint(equalToConstant: 42),
-            addTrackerButton.heightAnchor.constraint(equalToConstant: 42),
-            
             // Заголовок
-            titleLabel.topAnchor.constraint(equalTo: topControlsStack.bottomAnchor, constant: 1),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
@@ -176,16 +159,16 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
 
 extension TrackerScreenController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.numberOfSections(for: selectedDate)
+        viewModel.numberOfSections(for: currentDate)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let total = viewModel.totalVisibleTrackers(for: selectedDate)
+        let total = viewModel.totalVisibleTrackers(for: currentDate)
         
         backLogo.isHidden = total > 0
         underLogoLabel.isHidden = total > 0
         
-        return viewModel.numberOfItems(in: section, for: selectedDate)
+        return viewModel.numberOfItems(in: section, for: currentDate)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -193,9 +176,9 @@ extension TrackerScreenController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let tracker = viewModel.tracker(at: indexPath, for: selectedDate)
+        let tracker = viewModel.tracker(at: indexPath, for: currentDate)
         let completedDays = viewModel.completedDays(for: tracker.id)
-        let isCompleted = viewModel.isTrackerCompleted(tracker.id, on: selectedDate)
+        let isCompleted = viewModel.isTrackerCompleted(tracker.id, on: currentDate)
         
         cell.configure(with: tracker, completedDays: completedDays, isCompletedToday: isCompleted)
         
@@ -203,12 +186,12 @@ extension TrackerScreenController: UICollectionViewDataSource {
             guard let self = self else { return }
             
             let today = Calendar.current.startOfDay(for: Date())
-            guard self.selectedDate <= today else { return }
+            guard self.currentDate <= today else { return }
             
-            self.viewModel.toggleTrackerCompletion(trackerID: tracker.id, on: self.selectedDate)
+            self.viewModel.toggleTrackerCompletion(trackerID: tracker.id, on: self.currentDate)
             if let cell = self.collectionView.cellForItem(at: indexPath) as? TrackerCell {
                 let updatedCompletedDays = self.viewModel.completedDays(for: tracker.id)
-                let updatedIsCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.selectedDate)
+                let updatedIsCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.currentDate)
                 cell.updateState(isCompletedToday: updatedIsCompleted, completedDays: updatedCompletedDays)
             }
         }
@@ -229,7 +212,7 @@ extension TrackerScreenController: UICollectionViewDataSource {
             for: indexPath
         ) as! SectionHeaderView
         
-        let title = viewModel.sectionTitle(for: indexPath.section, date: selectedDate)
+        let title = viewModel.sectionTitle(for: indexPath.section, date: currentDate)
         header.configure(with: title)
         return header
     }
