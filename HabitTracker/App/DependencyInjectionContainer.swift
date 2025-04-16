@@ -6,12 +6,48 @@
 //
 
 import UIKit
+import CoreData
 
 final class DependencyInjectionContainer {
     
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "ModelCoreData")
+        container.loadPersistentStores { description, error in
+            if let error = error {
+                print("Ошибка загрузки хранилища: \(error)")
+            }
+        }
+        return container
+    }()
+    
+    var context: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
+    
+    // MARK: - Stores
+    func makeTrackerStore() -> TrackerStore {
+        TrackerStore(context: context)
+    }
+
+    func makeTrackerCategoryStore() -> TrackerCategoryStore {
+        TrackerCategoryStore(context: context)
+    }
+
+    func makeTrackerRecordStore() -> TrackerRecordStore {
+        TrackerRecordStore(context: context)
+    }
+
     // MARK: - ViewModels
     func makeTrackerViewModel() -> TrackerViewModel {
-        return TrackerViewModel()
+        let trackerStore = makeTrackerStore()
+        let categoryStore = makeTrackerCategoryStore()
+        let recordStore = makeTrackerRecordStore()
+
+        return TrackerViewModel(
+            trackerStore: trackerStore,
+            categoryStore: categoryStore,
+            recordStore: recordStore
+        )
     }
     
     func makeStatisticViewModel() -> StatisticViewModel {
@@ -34,11 +70,11 @@ final class DependencyInjectionContainer {
         let trackerVC = makeTrackerScreenController()
         let trackerNav = UINavigationController(rootViewController: trackerVC)
         trackerNav.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "trackertLogoTabBar"), tag: 0)
-
+        
         let statsVC = makeStatisticScreenController()
         let statsNav = UINavigationController(rootViewController: statsVC)
         statsNav.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "statisticLogoTabBar"), tag: 1)
-
+        
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNav, statsNav]
         

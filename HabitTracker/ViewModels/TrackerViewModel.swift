@@ -11,6 +11,19 @@ final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
+    private let trackerStore: TrackerStore
+    private let categoryStore: TrackerCategoryStore
+    private let recordStore: TrackerRecordStore
+    
+    init(trackerStore: TrackerStore,
+         categoryStore: TrackerCategoryStore,
+         recordStore: TrackerRecordStore
+    ) {
+        self.trackerStore = trackerStore
+        self.categoryStore = categoryStore
+        self.recordStore = recordStore
+    }
+    
     func numberOfSections(for date: Date) -> Int {
         visibleCategories(for: date).count
     }
