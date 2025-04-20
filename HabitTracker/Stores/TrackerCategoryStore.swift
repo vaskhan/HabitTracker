@@ -13,4 +13,37 @@ final class TrackerCategoryStore {
     init(context: NSManagedObjectContext) {
         self.context = context
     }
+
+    func fetchCategory(with title: String) -> TrackerCategoryCoreData? {
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", title)
+
+        return try? context.fetch(request).first
+    }
+
+    func createCategoryIfNeeded(title: String) -> TrackerCategoryCoreData {
+        if let existing = fetchCategory(with: title) {
+            return existing
+        } else {
+            let new = TrackerCategoryCoreData(context: context)
+            new.title = title
+            saveContext()
+            return new
+        }
+    }
+
+    func fetchAllCategories() -> [TrackerCategoryCoreData] {
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        return (try? context.fetch(request)) ?? []
+    }
+
+    private func saveContext() {
+        guard context.hasChanges else { return }
+        do {
+            try context.save()
+        } catch {
+            print("Ошибка сохранения контекста категории: \(error)")
+        }
+    }
 }

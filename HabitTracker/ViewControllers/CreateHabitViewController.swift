@@ -12,6 +12,7 @@ final class CreateHabitViewController: UIViewController {
     
     // MARK: - Public
     var onCreateTracker: ((TrackerCategory) -> Void)?
+    var viewModel: TrackerViewModel?
     
     private var selectedCategory: TrackerCategory? = TrackerCategory(title: "Домашний уют", trackers: []) {
         didSet {
@@ -30,7 +31,7 @@ final class CreateHabitViewController: UIViewController {
     private let emojiAndColorPicker = EmojiAndColorPickerView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-
+    
     // MARK: - UI
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -107,98 +108,98 @@ final class CreateHabitViewController: UIViewController {
         emojiAndColorPicker.onChange = { [weak self] in
             self?.updateCreateButtonState()
         }
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
-
+    
     // MARK: - Setup
     private func setupUI() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-
+        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-
+        
         [titleLabel, nameField, optionContainerView, emojiAndColorPicker, cancelButton, createButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
-
+        
         [categoryButtonView, dividerView, scheduleButtonView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             optionContainerView.addSubview($0)
         }
-
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 26),
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-
+            
             nameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
             nameField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nameField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameField.heightAnchor.constraint(equalToConstant: 75),
-
+            
             optionContainerView.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 24),
             optionContainerView.leadingAnchor.constraint(equalTo: nameField.leadingAnchor),
             optionContainerView.trailingAnchor.constraint(equalTo: nameField.trailingAnchor),
-
+            
             categoryButtonView.topAnchor.constraint(equalTo: optionContainerView.topAnchor),
             categoryButtonView.leadingAnchor.constraint(equalTo: optionContainerView.leadingAnchor),
             categoryButtonView.trailingAnchor.constraint(equalTo: optionContainerView.trailingAnchor),
             categoryButtonView.heightAnchor.constraint(equalToConstant: 75),
-
+            
             dividerView.topAnchor.constraint(equalTo: categoryButtonView.bottomAnchor),
             dividerView.leadingAnchor.constraint(equalTo: optionContainerView.leadingAnchor, constant: 16),
             dividerView.trailingAnchor.constraint(equalTo: optionContainerView.trailingAnchor, constant: -16),
             dividerView.heightAnchor.constraint(equalToConstant: 0.5),
-
+            
             scheduleButtonView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             scheduleButtonView.leadingAnchor.constraint(equalTo: optionContainerView.leadingAnchor),
             scheduleButtonView.trailingAnchor.constraint(equalTo: optionContainerView.trailingAnchor),
             scheduleButtonView.heightAnchor.constraint(equalToConstant: 75),
             scheduleButtonView.bottomAnchor.constraint(equalTo: optionContainerView.bottomAnchor),
-
+            
             emojiAndColorPicker.topAnchor.constraint(equalTo: optionContainerView.bottomAnchor, constant: 32),
             emojiAndColorPicker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             emojiAndColorPicker.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-
+            
             cancelButton.topAnchor.constraint(equalTo: emojiAndColorPicker.bottomAnchor),
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -4),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
             createButton.topAnchor.constraint(equalTo: emojiAndColorPicker.bottomAnchor),
             createButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 4),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             createButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
             createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
         ])
     }
-
+    
     
     private func setupActions() {
         let categoryTap = UITapGestureRecognizer(target: self, action: #selector(categoryTapped))
@@ -249,22 +250,25 @@ final class CreateHabitViewController: UIViewController {
     }
     
     @objc private func createTapped() {
-        guard let selectedCategory = selectedCategory else { return }
+        guard
+            let name = nameField.text,
+            let color = emojiAndColorPicker.selectedColor,
+            let emoji = emojiAndColorPicker.selectedEmoji,
+            let selectedCategory = selectedCategory
+        else { return }
         
-        let newTracker = Tracker(
-            id: UUID(),
-            name: nameField.text ?? "",
-            color: emojiAndColorPicker.selectedColor ?? .blue,
-            emoji: emojiAndColorPicker.selectedEmoji ?? "😌",
-            schedule: selectedSchedule
+        guard
+            let coreDataCategory = viewModel?.categoryStore.createCategoryIfNeeded(title: selectedCategory.title)
+        else { return }
+        
+        viewModel?.createTracker(
+            name: name,
+            emoji: emoji,
+            color: color,
+            schedule: selectedSchedule,
+            categoryTitle: selectedCategory.title,
+            coreDataCategory: coreDataCategory
         )
-        
-        let newCategory = TrackerCategory(
-            title: selectedCategory.title,
-            trackers: selectedCategory.trackers + [newTracker]
-        )
-        
-        onCreateTracker?(newCategory)
         
         dismissToRoot()
     }

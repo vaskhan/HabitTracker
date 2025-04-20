@@ -8,6 +8,7 @@ import UIKit
 
 final class CreateEventViewController: UIViewController {
     var onCreateTracker: ((TrackerCategory) -> Void)?
+    var viewModel: TrackerViewModel?
     
     private var selectedCategory: TrackerCategory? = TrackerCategory(title: "Домашний уют", trackers: []) {
         didSet {
@@ -123,7 +124,7 @@ final class CreateEventViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -134,23 +135,23 @@ final class CreateEventViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-
+        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-
+        
         [titleLabel, nameField, categoryButtonView, emojiAndColorPicker, cancelButton, createButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
@@ -178,12 +179,12 @@ final class CreateEventViewController: UIViewController {
             cancelButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -4),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
             createButton.topAnchor.constraint(equalTo: emojiAndColorPicker.bottomAnchor),
             createButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 4),
             createButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             createButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
             createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
             
         ])
@@ -220,22 +221,26 @@ final class CreateEventViewController: UIViewController {
     }
     
     @objc private func createTapped() {
-        guard let selectedCategory = selectedCategory else { return }
+        guard
+            let name = nameField.text,
+            let color = emojiAndColorPicker.selectedColor,
+            let emoji = emojiAndColorPicker.selectedEmoji,
+            let selectedCategory = selectedCategory
+        else { return }
         
-        let newTracker = Tracker(
-            id: UUID(),
-            name: nameField.text ?? "",
-            color: emojiAndColorPicker.selectedColor ?? .systemTeal,
-            emoji: emojiAndColorPicker.selectedEmoji ?? "🛋️",
-            schedule: []
+        guard
+            let coreDataCategory = viewModel?.categoryStore.createCategoryIfNeeded(title: selectedCategory.title)
+        else { return }
+        
+        viewModel?.createTracker(
+            name: name,
+            emoji: emoji,
+            color: color,
+            schedule: [],
+            categoryTitle: selectedCategory.title,
+            coreDataCategory: coreDataCategory
         )
         
-        let newCategory = TrackerCategory(
-            title: selectedCategory.title,
-            trackers: selectedCategory.trackers + [newTracker]
-        )
-        
-        onCreateTracker?(newCategory)
         dismissToRoot()
     }
 }

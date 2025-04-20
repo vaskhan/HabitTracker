@@ -11,6 +11,7 @@ import CoreData
 final class DependencyInjectionContainer {
     
     lazy var persistentContainer: NSPersistentContainer = {
+        DaysValueTransformer.register()
         let container = NSPersistentContainer(name: "ModelCoreData")
         container.loadPersistentStores { description, error in
             if let error = error {
