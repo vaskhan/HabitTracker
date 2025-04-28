@@ -6,12 +6,37 @@
 //
 
 import UIKit
+import CoreData
 
 final class DependencyInjectionContainer {
     
+    lazy var persistentContainer: NSPersistentContainer = {
+        DaysValueTransformer.register()
+        let container = NSPersistentContainer(name: "ModelCoreData")
+        container.loadPersistentStores { description, error in
+            if let error = error {
+                print("Ошибка загрузки хранилища: \(error)")
+            }
+        }
+        return container
+    }()
+    
+    var context: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
+    
+    // MARK: - Stores
+    lazy var trackerStore = TrackerStore(context: context)
+    lazy var trackerCategoryStore = TrackerCategoryStore(context: context)
+    lazy var trackerRecordStore = TrackerRecordStore(context: context)
+
     // MARK: - ViewModels
     func makeTrackerViewModel() -> TrackerViewModel {
-        return TrackerViewModel()
+        TrackerViewModel(
+            trackerStore: trackerStore,
+            categoryStore: trackerCategoryStore,
+            recordStore: trackerRecordStore
+        )
     }
     
     func makeStatisticViewModel() -> StatisticViewModel {
@@ -34,11 +59,11 @@ final class DependencyInjectionContainer {
         let trackerVC = makeTrackerScreenController()
         let trackerNav = UINavigationController(rootViewController: trackerVC)
         trackerNav.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "trackertLogoTabBar"), tag: 0)
-
+        
         let statsVC = makeStatisticScreenController()
         let statsNav = UINavigationController(rootViewController: statsVC)
         statsNav.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "statisticLogoTabBar"), tag: 1)
-
+        
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNav, statsNav]
         

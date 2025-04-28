@@ -97,6 +97,9 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
+        
+        viewModel.loadTrackers()
+        viewModel.trackerStore.delegate = self
     }
     
     @objc private func dateChanged() {
@@ -104,13 +107,12 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     }
     
     @objc private func didTapAddTracker() {
-        let createTrackerSelection = TrackerSelectionViewController()
+        let createTrackerSelection = TrackerSelectionViewController(viewModel: self.viewModel)
         createTrackerSelection.onCreateTracker = { [weak self] newCategory in
             guard let self = self else { return }
             for tracker in newCategory.trackers {
                 self.viewModel.addTracker(tracker, toCategoryWithTitle: newCategory.title)
             }
-            self.collectionView.reloadData()
         }
         presentSheet(createTrackerSelection)
     }
@@ -253,3 +255,9 @@ extension TrackerScreenController: UICollectionViewDelegateFlowLayout {
     
 }
 
+extension TrackerScreenController: TrackerStoreDelegate {
+    func didUpdateTrackers() {
+        viewModel.loadTrackers()
+        collectionView.reloadData()
+    }
+}

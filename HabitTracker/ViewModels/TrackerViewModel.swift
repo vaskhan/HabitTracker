@@ -11,6 +11,22 @@ final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
+    let trackerStore: TrackerStore
+    let categoryStore: TrackerCategoryStore
+    let recordStore: TrackerRecordStore
+    
+    init(trackerStore: TrackerStore,
+         categoryStore: TrackerCategoryStore,
+         recordStore: TrackerRecordStore
+    ) {
+        self.trackerStore = trackerStore
+        self.categoryStore = categoryStore
+        self.recordStore = recordStore
+        
+        self.completedTrackers = recordStore.fetchAllRecords()
+        trackerStore.delegate = self
+    }
+    
     func numberOfSections(for date: Date) -> Int {
         visibleCategories(for: date).count
     }
@@ -32,22 +48,23 @@ final class TrackerViewModel {
     }
     
     func toggleTrackerCompletion(trackerID: UUID, on date: Date) {
-        let dayStart = Calendar.current.startOfDay(for: date)
-        let record = TrackerRecord(trackerId: trackerID, date: dayStart)
+        let record = TrackerRecord(trackerId: trackerID, date: Calendar.current.startOfDay(for: date))
         
         if let index = completedTrackers.firstIndex(of: record) {
+            recordStore.removeRecord(record)
             completedTrackers.remove(at: index)
         } else {
+            recordStore.addRecord(record)
             completedTrackers.append(record)
         }
     }
     
     func completedDays(for trackerID: UUID) -> Int {
-        completedTrackers.filter { $0.trackerId == trackerID }.count
+        recordStore.numberOfCompletions(trackerId: trackerID)
     }
     
     func isTrackerCompleted(_ trackerID: UUID, on date: Date) -> Bool {
-        completedTrackers.contains { $0.trackerId == trackerID && Calendar.current.isDate($0.date, inSameDayAs: date) }
+        recordStore.isCompleted(trackerId: trackerID, on: date)
     }
     
     func shouldDisplay(_ tracker: Tracker, on date: Date) -> Bool {
@@ -77,5 +94,36 @@ final class TrackerViewModel {
             let new = TrackerCategory(title: title, trackers: [tracker])
             categories.append(new)
         }
+    }
+    
+    func createTracker(
+        name: String,
+        emoji: String,
+        color: UIColor,
+        schedule: [DayOfWeek],
+        categoryTitle: String,
+        coreDataCategory: TrackerCategoryCoreData
+    ) {
+        let id = UUID()
+        
+        trackerStore.addTracker(
+            id: id,
+            name: name,
+            emoji: emoji,
+            colorHex: color.toHexString(),
+            schedule: schedule,
+            category: coreDataCategory
+        )
+        loadTrackers()
+    }
+    
+    func loadTrackers() {
+        categories = trackerStore.fetchTrackersGroupedByCategory()
+    }
+}
+
+extension TrackerViewModel: TrackerStoreDelegate {
+    func didUpdateTrackers() {
+        loadTrackers()
     }
 }

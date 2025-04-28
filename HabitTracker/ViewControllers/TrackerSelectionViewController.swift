@@ -10,6 +10,16 @@ import UIKit
 
 final class TrackerSelectionViewController: UIViewController {
     var onCreateTracker: ((TrackerCategory) -> Void)?
+    private let viewModel: TrackerViewModel
+    
+    init(viewModel: TrackerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) не реализован")
+    }
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -50,6 +60,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     @objc private func habitTapped() {
         let createHabitVC = CreateHabitViewController()
+        createHabitVC.viewModel = viewModel
         createHabitVC.onCreateTracker = { [weak self] newCategory in
             self?.onCreateTracker?(newCategory)
             self?.dismissToRoot()
@@ -59,6 +70,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     @objc private func eventTapped() {
         let createEventVC = CreateEventViewController()
+        createEventVC.viewModel = viewModel
         createEventVC.onCreateTracker = { [weak self] newCategory in
             self?.onCreateTracker?(newCategory)
             self?.dismissToRoot()
