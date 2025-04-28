@@ -26,28 +26,16 @@ final class DependencyInjectionContainer {
     }
     
     // MARK: - Stores
-    func makeTrackerStore() -> TrackerStore {
-        TrackerStore(context: context)
-    }
-
-    func makeTrackerCategoryStore() -> TrackerCategoryStore {
-        TrackerCategoryStore(context: context)
-    }
-
-    func makeTrackerRecordStore() -> TrackerRecordStore {
-        TrackerRecordStore(context: context)
-    }
+    lazy var trackerStore = TrackerStore(context: context)
+    lazy var trackerCategoryStore = TrackerCategoryStore(context: context)
+    lazy var trackerRecordStore = TrackerRecordStore(context: context)
 
     // MARK: - ViewModels
     func makeTrackerViewModel() -> TrackerViewModel {
-        let trackerStore = makeTrackerStore()
-        let categoryStore = makeTrackerCategoryStore()
-        let recordStore = makeTrackerRecordStore()
-
-        return TrackerViewModel(
+        TrackerViewModel(
             trackerStore: trackerStore,
-            categoryStore: categoryStore,
-            recordStore: recordStore
+            categoryStore: trackerCategoryStore,
+            recordStore: trackerRecordStore
         )
     }
     

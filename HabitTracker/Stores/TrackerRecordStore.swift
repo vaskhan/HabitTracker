@@ -24,7 +24,10 @@ final class TrackerRecordStore {
     func removeRecord(_ record: TrackerRecord) {
         let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
         let start = Calendar.current.startOfDay(for: record.date)
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: start)!
+        guard let end = Calendar.current.date(byAdding: .day, value: 1, to: start) else {
+            print("Ошибка: не удалось получить дату окончания")
+            return
+        }
 
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "trackerId == %@", record.trackerId as CVarArg),
@@ -43,7 +46,10 @@ final class TrackerRecordStore {
     func isCompleted(trackerId: UUID, on date: Date) -> Bool {
         let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
         let start = Calendar.current.startOfDay(for: date)
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: start)!
+        guard let end = Calendar.current.date(byAdding: .day, value: 1, to: start) else {
+            print("Ошибка: не удалось получить дату окончания")
+            return false
+        }
 
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "trackerId == %@", trackerId as CVarArg),

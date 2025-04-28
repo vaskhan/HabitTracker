@@ -20,16 +20,16 @@ final class TrackerCategoryStore {
 
         return try? context.fetch(request).first
     }
-
+    
     func createCategoryIfNeeded(title: String) -> TrackerCategoryCoreData {
         if let existing = fetchCategory(with: title) {
             return existing
-        } else {
-            let new = TrackerCategoryCoreData(context: context)
-            new.title = title
-            saveContext()
-            return new
         }
+        
+        let newCategory = TrackerCategoryCoreData(context: context)
+        newCategory.title = title
+        saveContext()
+        return newCategory
     }
 
     func fetchAllCategories() -> [TrackerCategoryCoreData] {

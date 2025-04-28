@@ -20,7 +20,13 @@ final class DaysValueTransformer: ValueTransformer {
 
     override func transformedValue(_ value: Any?) -> Any? {
         guard let days = value as? [DayOfWeek] else { return nil }
-        return try? JSONEncoder().encode(days)
+
+        do {
+            return try JSONEncoder().encode(days)
+        } catch {
+            print("❗️Ошибка при преобразовании [DayOfWeek] в Data: \(error)")
+            return nil
+        }
     }
 
     override func reverseTransformedValue(_ value: Any?) -> Any? {
