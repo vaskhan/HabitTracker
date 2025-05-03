@@ -56,8 +56,7 @@ final class TrackerRecordStore {
             NSPredicate(format: "date >= %@ AND date < %@", start as NSDate, end as NSDate)
         ])
 
-        let count = (try? context.count(for: request)) ?? 0
-        return count > 0
+        return (try? context.count(for: request)) ?? 0 > 0
     }
 
     func numberOfCompletions(trackerId: UUID) -> Int {
@@ -68,16 +67,10 @@ final class TrackerRecordStore {
 
     func fetchAllRecords() -> [TrackerRecord] {
         let request: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
-
-        do {
-            return try context.fetch(request).compactMap {
-                guard let id = $0.trackerId, let date = $0.date else { return nil }
-                return TrackerRecord(trackerId: id, date: date)
-            }
-        } catch {
-            print("Ошибка при получении всех записей: \(error)")
-            return []
-        }
+        return (try? context.fetch(request))?.compactMap {
+            guard let id = $0.trackerId, let date = $0.date else { return nil }
+            return TrackerRecord(trackerId: id, date: date)
+        } ?? []
     }
 
     private func saveContext() {
@@ -89,3 +82,4 @@ final class TrackerRecordStore {
         }
     }
 }
+

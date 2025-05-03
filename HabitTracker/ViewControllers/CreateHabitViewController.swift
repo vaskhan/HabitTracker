@@ -13,8 +13,9 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Public
     var onCreateTracker: ((TrackerCategory) -> Void)?
     var viewModel: TrackerViewModel?
+    var categoryViewModel: TrackerCategoryViewModel?
     
-    private var selectedCategory: TrackerCategory? = TrackerCategory(title: "Домашний уют", trackers: []) {
+    private var selectedCategory: TrackerCategory? {
         didSet {
             updateCategoryUI()
             updateCreateButtonState()
@@ -274,7 +275,14 @@ final class CreateHabitViewController: UIViewController {
     }
     
     @objc private func categoryTapped() {
-        print("Выбор категории")
+        guard let viewModel = categoryViewModel else { return }
+        let categoryVC = CategorySelectionViewController(viewModel: viewModel)
+        categoryVC.onCategorySelected = { [weak self] selectedCategory in
+            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? "Без названия", trackers: [])
+            self?.updateCategoryUI()
+            self?.updateCreateButtonState()
+        }
+        presentSheet(categoryVC)
     }
     
     @objc private func scheduleTapped() {

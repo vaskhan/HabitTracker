@@ -11,9 +11,11 @@ import UIKit
 final class TrackerSelectionViewController: UIViewController {
     var onCreateTracker: ((TrackerCategory) -> Void)?
     private let viewModel: TrackerViewModel
-    
-    init(viewModel: TrackerViewModel) {
+    private let categoryViewModel: TrackerCategoryViewModel
+
+    init(viewModel: TrackerViewModel, categoryViewModel: TrackerCategoryViewModel) {
         self.viewModel = viewModel
+        self.categoryViewModel = categoryViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -61,22 +63,25 @@ final class TrackerSelectionViewController: UIViewController {
     @objc private func habitTapped() {
         let createHabitVC = CreateHabitViewController()
         createHabitVC.viewModel = viewModel
+        createHabitVC.categoryViewModel = categoryViewModel
         createHabitVC.onCreateTracker = { [weak self] newCategory in
             self?.onCreateTracker?(newCategory)
             self?.dismissToRoot()
         }
         presentSheet(createHabitVC)
     }
-    
+
     @objc private func eventTapped() {
         let createEventVC = CreateEventViewController()
         createEventVC.viewModel = viewModel
+        createEventVC.categoryViewModel = categoryViewModel
         createEventVC.onCreateTracker = { [weak self] newCategory in
             self?.onCreateTracker?(newCategory)
             self?.dismissToRoot()
         }
         presentSheet(createEventVC)
     }
+
     
     private func setupLayout() {
         [titleLabel, habitButton, eventButton].forEach {

@@ -8,46 +8,21 @@
 import CoreData
 import UIKit
 
-protocol TrackerStoreDelegate: AnyObject {
-    func didUpdateTrackers()
-}
-
-final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
+final class TrackerStore {
     private let context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
-    
-    weak var delegate: TrackerStoreDelegate?
     
     init(context: NSManagedObjectContext) {
         self.context = context
-        super.init()
-        setupFetchedResultsController()
     }
     
-    private func setupFetchedResultsController() {
-        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [
+    func fetchTrackersGroupedByCategory() -> [TrackerCategory] {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.sortDescriptors = [
             NSSortDescriptor(key: "category.title", ascending: true),
             NSSortDescriptor(key: "name", ascending: true)
         ]
         
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        fetchedResultsController?.delegate = self
-        
-        do {
-            try fetchedResultsController?.performFetch()
-        } catch {
-            print("Ошибка fetch: \(error)")
-        }
-    }
-    
-    func fetchTrackersGroupedByCategory() -> [TrackerCategory] {
-        let coreDataObjects = fetchedResultsController?.fetchedObjects ?? []
+        let coreDataObjects = (try? context.fetch(request)) ?? []
         
         let grouped = Dictionary(grouping: coreDataObjects) { $0.category?.title ?? "Без категории" }
         
@@ -103,9 +78,5 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         } catch {
             print("Ошибка сохранения контекста: \(error)")
         }
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdateTrackers()
     }
 }
