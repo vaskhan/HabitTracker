@@ -75,7 +75,7 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) не реализован")
     }
     
     // MARK: - Configure

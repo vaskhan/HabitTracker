@@ -10,6 +10,7 @@ import UIKit
 final class TrackerScreenController: UIViewController, UICollectionViewDelegate {
     
     private let viewModel: TrackerViewModel
+    private let categoryViewModel: TrackerCategoryViewModel
     
     // MARK: - UI Elements
     private let addTrackerButton: UIButton = {
@@ -76,8 +77,9 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     }
     
     // MARK: - Init
-    init(viewModel: TrackerViewModel) {
+    init(viewModel: TrackerViewModel, categoryViewModel: TrackerCategoryViewModel) {
         self.viewModel = viewModel
+        self.categoryViewModel = categoryViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -99,7 +101,12 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         
         viewModel.loadTrackers()
-        viewModel.trackerStore.delegate = self
+        
+        viewModel.onTrackersUpdated = { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
+        }
     }
     
     @objc private func dateChanged() {
@@ -107,15 +114,21 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     }
     
     @objc private func didTapAddTracker() {
-        let createTrackerSelection = TrackerSelectionViewController(viewModel: self.viewModel)
+        let createTrackerSelection = TrackerSelectionViewController(
+            viewModel: self.viewModel,
+            categoryViewModel: self.categoryViewModel
+        )
+        
         createTrackerSelection.onCreateTracker = { [weak self] newCategory in
             guard let self = self else { return }
             for tracker in newCategory.trackers {
                 self.viewModel.addTracker(tracker, toCategoryWithTitle: newCategory.title)
             }
+            self.viewModel.loadTrackers()
         }
         presentSheet(createTrackerSelection)
     }
+    
     
     // MARK: - Setup
     private func setupElements() {
@@ -253,11 +266,4 @@ extension TrackerScreenController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.bounds.width, height: 30)
     }
     
-}
-
-extension TrackerScreenController: TrackerStoreDelegate {
-    func didUpdateTrackers() {
-        viewModel.loadTrackers()
-        collectionView.reloadData()
-    }
 }

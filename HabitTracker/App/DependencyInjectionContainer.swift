@@ -45,8 +45,9 @@ final class DependencyInjectionContainer {
     
     // MARK: - ViewControllers
     func makeTrackerScreenController() -> UIViewController {
-        let viewModel = makeTrackerViewModel()
-        return TrackerScreenController(viewModel: viewModel)
+        let trackerViewModel = makeTrackerViewModel()
+        let categoryViewModel = TrackerCategoryViewModel(categoryStore: trackerCategoryStore)
+        return TrackerScreenController(viewModel: trackerViewModel, categoryViewModel: categoryViewModel)
     }
     
     func makeStatisticScreenController() -> UIViewController {

@@ -10,7 +10,8 @@ import UIKit
 final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
-    
+    var onTrackersUpdated: (([TrackerCategory]) -> Void)?
+
     let trackerStore: TrackerStore
     let categoryStore: TrackerCategoryStore
     let recordStore: TrackerRecordStore
@@ -24,7 +25,6 @@ final class TrackerViewModel {
         self.recordStore = recordStore
         
         self.completedTrackers = recordStore.fetchAllRecords()
-        trackerStore.delegate = self
     }
     
     func numberOfSections(for date: Date) -> Int {
@@ -119,11 +119,6 @@ final class TrackerViewModel {
     
     func loadTrackers() {
         categories = trackerStore.fetchTrackersGroupedByCategory()
-    }
-}
-
-extension TrackerViewModel: TrackerStoreDelegate {
-    func didUpdateTrackers() {
-        loadTrackers()
+        onTrackersUpdated?(categories)
     }
 }

@@ -10,32 +10,43 @@ import CoreData
 final class TrackerCategoryStore {
     private let context: NSManagedObjectContext
 
+    var onCategoriesChanged: (([TrackerCategoryCoreData]) -> Void)?
+
     init(context: NSManagedObjectContext) {
         self.context = context
-    }
-
-    func fetchCategory(with title: String) -> TrackerCategoryCoreData? {
-        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "title == %@", title)
-
-        return try? context.fetch(request).first
-    }
-    
-    func createCategoryIfNeeded(title: String) -> TrackerCategoryCoreData {
-        if let existing = fetchCategory(with: title) {
-            return existing
-        }
-        
-        let newCategory = TrackerCategoryCoreData(context: context)
-        newCategory.title = title
-        saveContext()
-        return newCategory
     }
 
     func fetchAllCategories() -> [TrackerCategoryCoreData] {
         let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        return (try? context.fetch(request)) ?? []
+        let result = (try? context.fetch(request)) ?? []
+        return result
+    }
+
+    func fetchCategory(with title: String) -> TrackerCategoryCoreData? {
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", title)
+        return try? context.fetch(request).first
+    }
+
+    func createCategoryIfNeeded(title: String) -> TrackerCategoryCoreData {
+        if let existing = fetchCategory(with: title) {
+            return existing
+        }
+        return createNewCategory(title: title)
+    }
+
+    func createNewCategory(title: String) -> TrackerCategoryCoreData {
+        let category = TrackerCategoryCoreData(context: context)
+        category.title = title
+        saveContext()
+        notifyObservers()
+        return category
+    }
+
+    private func notifyObservers() {
+        let all = fetchAllCategories()
+        onCategoriesChanged?(all)
     }
 
     private func saveContext() {

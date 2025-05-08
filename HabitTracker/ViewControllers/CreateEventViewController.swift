@@ -9,8 +9,9 @@ import UIKit
 final class CreateEventViewController: UIViewController {
     var onCreateTracker: ((TrackerCategory) -> Void)?
     var viewModel: TrackerViewModel?
+    var categoryViewModel: TrackerCategoryViewModel?
     
-    private var selectedCategory: TrackerCategory? = TrackerCategory(title: "Домашний уют", trackers: []) {
+    private var selectedCategory: TrackerCategory? {
         didSet {
             updateCategoryUI()
             updateCreateButtonState()
@@ -43,40 +44,12 @@ final class CreateEventViewController: UIViewController {
         return field
     }()
     
-    private let categoryButtonView: UIView = {
+    private let categoryButtonView = CreateOptionRowView(title: "Категория")
+    
+    private let categoryContainer: UIView = {
         let view = UIView()
         view.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         view.layer.cornerRadius = 16
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        let titleButtonLabel = UILabel()
-        titleButtonLabel.text = "Категория"
-        titleButtonLabel.textColor = .blackDay
-        titleButtonLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        
-        let subtitButtonleLabel = UILabel()
-        subtitButtonleLabel.text = ""
-        subtitButtonleLabel.textColor = .grayText
-        subtitButtonleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        
-        let chevronImageView = UIImageView(image: UIImage(named: "chevronForField"))
-        
-        [titleButtonLabel, subtitButtonleLabel, chevronImageView].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
-        
-        NSLayoutConstraint.activate([
-            titleButtonLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            titleButtonLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
-            
-            subtitButtonleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            subtitButtonleLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -14),
-            
-            chevronImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            chevronImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
         return view
     }()
     
@@ -152,7 +125,10 @@ final class CreateEventViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
-        [titleLabel, nameField, categoryButtonView, emojiAndColorPicker, cancelButton, createButton].forEach {
+        [titleLabel, nameField, categoryContainer, emojiAndColorPicker, cancelButton, createButton].forEach {
+            categoryContainer.addSubview(categoryButtonView)
+            categoryButtonView.translatesAutoresizingMaskIntoConstraints = false
+            
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
@@ -166,10 +142,15 @@ final class CreateEventViewController: UIViewController {
             nameField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameField.heightAnchor.constraint(equalToConstant: 75),
             
-            categoryButtonView.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 24),
-            categoryButtonView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            categoryButtonView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            categoryButtonView.heightAnchor.constraint(equalToConstant: 75),
+            categoryContainer.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 24),
+            categoryContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            categoryContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            categoryContainer.heightAnchor.constraint(equalToConstant: 75),
+            
+            categoryButtonView.topAnchor.constraint(equalTo: categoryContainer.topAnchor),
+            categoryButtonView.bottomAnchor.constraint(equalTo: categoryContainer.bottomAnchor),
+            categoryButtonView.leadingAnchor.constraint(equalTo: categoryContainer.leadingAnchor),
+            categoryButtonView.trailingAnchor.constraint(equalTo: categoryContainer.trailingAnchor),
             
             emojiAndColorPicker.topAnchor.constraint(equalTo: categoryButtonView.bottomAnchor, constant: 32),
             emojiAndColorPicker.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -194,13 +175,7 @@ final class CreateEventViewController: UIViewController {
     }
     
     private func updateCategoryUI() {
-        if let subtitleLabel = categoryButtonView.subviews.compactMap({ $0 as? UILabel }).last {
-            subtitleLabel.text = selectedCategory?.title ?? ""
-        }
-    }
-    
-    @objc private func categoryTapped() {
-        print("Выбор категории")
+        categoryButtonView.updateSubtitle(selectedCategory?.title ?? "")
     }
     
     private func updateCreateButtonState() {
@@ -210,6 +185,17 @@ final class CreateEventViewController: UIViewController {
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         createButton.isEnabled = nameFilled && categoryChosen && emojiChosen && colorChosen
         createButton.backgroundColor = createButton.isEnabled ? .blackDay : .gray
+    }
+    
+    @objc private func categoryTapped() {
+        guard let viewModel = categoryViewModel else { return }
+        let categoryVC = CategorySelectionViewController(viewModel: viewModel)
+        categoryVC.onCategorySelected = { [weak self] selectedCategory in
+            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? "Без названия", trackers: [])
+            self?.updateCategoryUI()
+            self?.updateCreateButtonState()
+        }
+        presentSheet(categoryVC)
     }
     
     @objc private func textFieldDidChange() {
