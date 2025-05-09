@@ -82,7 +82,9 @@ final class TrackerCell: UICollectionViewCell {
     func configure(with tracker: Tracker, completedDays: Int, isCompletedToday: Bool) {
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.name
-        daysLabel.text = "\(completedDays) \(dayWord(for: completedDays))"
+        let format = NSLocalizedString("numberOfDays", comment: "")
+        let result = String.localizedStringWithFormat(format, completedDays)
+        daysLabel.text = result
         
         cardView.backgroundColor = tracker.color
         
@@ -95,7 +97,9 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     func updateState(isCompletedToday: Bool, completedDays: Int) {
-        daysLabel.text = "\(completedDays) \(dayWord(for: completedDays))"
+        let format = NSLocalizedString("numberOfDays", comment: "")
+        let result = String.localizedStringWithFormat(format, completedDays)
+        daysLabel.text = result
         
         let iconName = isCompletedToday ? "checkmark" : "plus"
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
@@ -104,25 +108,7 @@ final class TrackerCell: UICollectionViewCell {
         plusButton.tintColor = .white
         plusButton.backgroundColor = cardView.backgroundColor?.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
     }
-    
-    private func dayWord(for count: Int) -> String {
-        let remainderOfHundred = count % 100
-        let remainderOfTen = count % 10
-        
-        if remainderOfHundred >= 11 && remainderOfHundred <= 14 {
-            return "дней"
-        }
-        
-        switch remainderOfTen {
-        case 1:
-            return "день"
-        case 2, 3, 4:
-            return "дня"
-        default:
-            return "дней"
-        }
-    }
-    
+   
     // MARK: - Layout
     private func setupConstraints() {
         NSLayoutConstraint.activate([

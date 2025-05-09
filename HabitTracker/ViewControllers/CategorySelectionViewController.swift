@@ -15,7 +15,7 @@ final class CategorySelectionViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Категория"
+        label.text = L10n.categoryLabel
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textColor = .blackDay
         label.textAlignment = .center
@@ -30,7 +30,7 @@ final class CategorySelectionViewController: UIViewController {
     
     private let underLogoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Привычки и события можно\nобъединить по смыслу"
+        label.text = L10n.categoryListDescription
         label.font = UIFont(name: "SFPro-Medium", size: 12)
         label.textColor = .blackDay
         label.textAlignment = .center
@@ -40,7 +40,7 @@ final class CategorySelectionViewController: UIViewController {
     
     private let addCategoryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.categoryAddButton, for: .normal)
         button.backgroundColor = .blackDay
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
@@ -142,7 +142,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         let isFirst = indexPath.row == 0
         let isLast = indexPath.row == viewModel.numberOfCategories - 1
 
-        cell.configure(title: category.title ?? "Без названия", isFirst: isFirst, isLast: isLast)
+        cell.configure(title: category.title ?? L10n.trackerNameMissing, isFirst: isFirst, isLast: isLast)
         return cell
     }
     

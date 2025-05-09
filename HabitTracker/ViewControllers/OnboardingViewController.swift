@@ -18,7 +18,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         blueImage.translatesAutoresizingMaskIntoConstraints = false
         
         let blueLabel = UILabel()
-        blueLabel.text = "Отслеживайте только то, что хотите"
+        blueLabel.text = L10n.onboardingTitleBlue
         blueLabel.font = UIFont(name: "SFPro-Bold", size: 32)
         blueLabel.textColor = .blackDay
         blueLabel.textAlignment = .center
@@ -26,7 +26,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         blueLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let blueButton = UIButton(type: .system)
-        blueButton.setTitle("Вот это технологии!", for: .normal)
+        blueButton.setTitle(L10n.onboardingButton, for: .normal)
         blueButton.backgroundColor = .blackDay
         blueButton.setTitleColor(.white, for: .normal)
         blueButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
@@ -61,7 +61,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         redImage.translatesAutoresizingMaskIntoConstraints = false
         
         let redLabel = UILabel()
-        redLabel.text = "Даже если это не литры воды и йога"
+        redLabel.text = L10n.onboardingTitleRed
         redLabel.font = UIFont(name: "SFPro-Bold", size: 32)
         redLabel.textColor = .blackDay
         redLabel.textAlignment = .center
@@ -69,7 +69,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         redLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let redButton = UIButton(type: .system)
-        redButton.setTitle("Вот это технологии!", for: .normal)
+        redButton.setTitle(L10n.onboardingButton, for: .normal)
         redButton.backgroundColor = .blackDay
         redButton.setTitleColor(.white, for: .normal)
         redButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)

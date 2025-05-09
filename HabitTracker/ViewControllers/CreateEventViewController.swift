@@ -25,7 +25,7 @@ final class CreateEventViewController: UIViewController {
     // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новое нерегулярное событие"
+        label.text = L10n.newEventButton
         label.textColor = .blackDay
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textAlignment = .center
@@ -34,7 +34,7 @@ final class CreateEventViewController: UIViewController {
     
     private let nameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Введите название трекера"
+        field.placeholder = L10n.trackerNamePlaceholder
         field.textColor = .grayText
         field.font = UIFont(name: "SFPro-Regular", size: 17)
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
@@ -44,7 +44,7 @@ final class CreateEventViewController: UIViewController {
         return field
     }()
     
-    private let categoryButtonView = CreateOptionRowView(title: "Категория")
+    private let categoryButtonView = CreateOptionRowView(title: L10n.categoryLabel)
     
     private let categoryContainer: UIView = {
         let view = UIView()
@@ -55,7 +55,7 @@ final class CreateEventViewController: UIViewController {
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(L10n.cancelButton, for: .normal)
         button.setTitleColor(.redYPcolor, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.borderWidth = 1
@@ -67,7 +67,7 @@ final class CreateEventViewController: UIViewController {
     
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(L10n.categoryCreateButton, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
@@ -191,7 +191,7 @@ final class CreateEventViewController: UIViewController {
         guard let viewModel = categoryViewModel else { return }
         let categoryVC = CategorySelectionViewController(viewModel: viewModel)
         categoryVC.onCategorySelected = { [weak self] selectedCategory in
-            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? "Без названия", trackers: [])
+            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? L10n.trackerNameMissing, trackers: [])
             self?.updateCategoryUI()
             self?.updateCreateButtonState()
         }

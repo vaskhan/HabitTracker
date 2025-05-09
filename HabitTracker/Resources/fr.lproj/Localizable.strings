@@ -1,0 +1,61 @@
+/* 
+  Localizable.strings (French)
+  HabitTracker
+
+  Created by Василий Ханин on 08.05.2025.
+  
+*/
+
+// MARK: - Jours de la semaine et planning
+"mondayFull" = "Lundi";
+"tuesdayFull" = "Mardi";
+"wednesdayFull" = "Mercredi";
+"thursdayFull" = "Jeudi";
+"fridayFull" = "Vendredi";
+"saturdayFull" = "Samedi";
+"sundayFull" = "Dimanche";
+
+"mondayShort" = "Lun";
+"tuesdayShort" = "Mar";
+"wednesdayShort" = "Mer";
+"thursdayShort" = "Jeu";
+"fridayShort" = "Ven";
+"saturdayShort" = "Sam";
+"sundayShort" = "Dim";
+
+"schedule" = "Planning";
+"everyDay" = "Tous les jours";
+
+// MARK: - Catégories
+"categoryTitleMissing" = "Sans catégorie";
+"categoryLabel" = "Catégorie";
+"categoryListDescription" = "Les habitudes et événements peuvent\nêtre regroupés par signification";
+"categoryAddButton" = "Ajouter une catégorie";
+"categoryCreateTitle" = "Nouvelle catégorie";
+"categoryCreatePlaceholder" = "Entrez le nom de la catégorie";
+"categoryCreateButton" = "Créer";
+
+// MARK: - Création d’un traqueur
+"newEventButton" = "Nouvel événement irrégulier";
+"trackerNamePlaceholder" = "Entrez le nom du traqueur";
+"cancelButton" = "Annuler";
+"trackerNameMissing" = "Sans nom";
+"newHabitButton" = "Nouvelle habitude";
+"createTrackerTitle" = "Création de traqueur";
+"habit" = "Habitude";
+"event" = "Événement irrégulier";
+"doneButton" = "Terminé";
+
+// MARK: - Onboarding
+"onboardingTitleBlue" = "Suivez uniquement ce que vous souhaitez";
+"onboardingButton" = "C’est ça la technologie !";
+"onboardingTitleRed" = "Même si ce n’est pas du yoga ou des litres d’eau";
+
+// MARK: - Écran principal
+"trackers" = "Traqueurs";
+"search" = "Recherche";
+"baseScreenPrompt" = "Que souhaitez-vous suivre ?";
+"statistic" = "Statistiques";
+
+// MARK: - Couleurs
+"color" = "Couleur";

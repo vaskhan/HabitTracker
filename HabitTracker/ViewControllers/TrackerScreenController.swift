@@ -24,13 +24,13 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
-        picker.locale = Locale(identifier: "ru_RU")
+        picker.locale = .current
         return picker
     }()
     
     private let titleLabel: UILabel = {
         let title = UILabel()
-        title.text = "Трекеры"
+        title.text = L10n.trackers
         title.font = UIFont(name: "SFPro-Bold", size: 34)
         title.textColor = .blackDay
         return title
@@ -38,7 +38,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private let searchBar: UISearchBar = {
         let bar = UISearchBar()
-        bar.placeholder = "Поиск"
+        bar.placeholder = L10n.search
         bar.searchBarStyle = .minimal
         bar.backgroundImage = UIImage()
         return bar
@@ -52,7 +52,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private let underLogoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = L10n.baseScreenPrompt
         label.font = UIFont(name: "SFPro-Medium", size: 12)
         label.textColor = .blackDay
         return label

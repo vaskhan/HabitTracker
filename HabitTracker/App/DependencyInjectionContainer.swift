@@ -59,11 +59,11 @@ final class DependencyInjectionContainer {
     func makeTabBarController() -> UITabBarController {
         let trackerVC = makeTrackerScreenController()
         let trackerNav = UINavigationController(rootViewController: trackerVC)
-        trackerNav.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "trackertLogoTabBar"), tag: 0)
+        trackerNav.tabBarItem = UITabBarItem(title: L10n.trackers, image: UIImage(named: "trackertLogoTabBar"), tag: 0)
         
         let statsVC = makeStatisticScreenController()
         let statsNav = UINavigationController(rootViewController: statsVC)
-        statsNav.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "statisticLogoTabBar"), tag: 1)
+        statsNav.tabBarItem = UITabBarItem(title: L10n.statistic, image: UIImage(named: "statisticLogoTabBar"), tag: 1)
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNav, statsNav]

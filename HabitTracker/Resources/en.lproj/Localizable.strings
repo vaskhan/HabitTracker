@@ -1,0 +1,61 @@
+/* 
+  Localizable.strings (English)
+  HabitTracker
+
+  Created by Василий Ханин on 08.05.2025.
+  
+*/
+
+// MARK: - Days of the Week and Schedule
+"mondayFull" = "Monday";
+"tuesdayFull" = "Tuesday";
+"wednesdayFull" = "Wednesday";
+"thursdayFull" = "Thursday";
+"fridayFull" = "Friday";
+"saturdayFull" = "Saturday";
+"sundayFull" = "Sunday";
+
+"mondayShort" = "Mon";
+"tuesdayShort" = "Tue";
+"wednesdayShort" = "Wed";
+"thursdayShort" = "Thu";
+"fridayShort" = "Fri";
+"saturdayShort" = "Sat";
+"sundayShort" = "Sun";
+
+"schedule" = "Schedule";
+"everyDay" = "Every day";
+
+// MARK: - Categories
+"categoryTitleMissing" = "No category";
+"categoryLabel" = "Category";
+"categoryListDescription" = "Habits and events can\nbe grouped by meaning";
+"categoryAddButton" = "Add category";
+"categoryCreateTitle" = "New category";
+"categoryCreatePlaceholder" = "Enter category name";
+"categoryCreateButton" = "Create";
+
+// MARK: - Create Tracker
+"newEventButton" = "New irregular event";
+"trackerNamePlaceholder" = "Enter tracker name";
+"cancelButton" = "Cancel";
+"trackerNameMissing" = "Untitled";
+"newHabitButton" = "New habit";
+"createTrackerTitle" = "Create tracker";
+"habit" = "Habit";
+"event" = "Irregular event";
+"doneButton" = "Done";
+
+// MARK: - Onboarding
+"onboardingTitleBlue" = "Track only what you want";
+"onboardingButton" = "Now that’s technology!";
+"onboardingTitleRed" = "Even if it’s not yoga or liters of water";
+
+// MARK: - Main Screen
+"trackers" = "Trackers";
+"search" = "Search";
+"baseScreenPrompt" = "What would you like to track?";
+"statistic" = "Statistics";
+
+// MARK: - Colors
+"color" = "Color";

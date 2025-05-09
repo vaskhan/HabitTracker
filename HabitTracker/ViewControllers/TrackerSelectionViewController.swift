@@ -25,7 +25,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Создание трекера"
+        label.text = L10n.createTrackerTitle
         label.textColor = .blackDay
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textAlignment = .center
@@ -34,7 +34,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Привычка", for: .normal)
+        button.setTitle(L10n.habit, for: .normal)
         button.backgroundColor = .blackDay
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
@@ -44,7 +44,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let eventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Нерегулярные событие", for: .normal)
+        button.setTitle(L10n.event, for: .normal)
         button.backgroundColor = .blackDay
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
