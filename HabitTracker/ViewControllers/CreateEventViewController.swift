@@ -68,7 +68,7 @@ final class CreateEventViewController: UIViewController {
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.categoryCreateButton, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         button.backgroundColor = .grayText
@@ -79,7 +79,7 @@ final class CreateEventViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupUI()
         updateCategoryUI()
         updateCreateButtonState()
@@ -184,7 +184,11 @@ final class CreateEventViewController: UIViewController {
         let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         createButton.isEnabled = nameFilled && categoryChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .gray
+        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .grayText
+        
+        let textColorName = createButton.isEnabled ? "whiteDay" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     @objc private func categoryTapped() {

@@ -20,15 +20,28 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         let blueLabel = UILabel()
         blueLabel.text = L10n.onboardingTitleBlue
         blueLabel.font = UIFont(name: "SFPro-Bold", size: 32)
-        blueLabel.textColor = .blackDay
+        blueLabel.textColor = UIColor(
+            named: "blackDay",
+            in: nil,
+            compatibleWith: UITraitCollection(userInterfaceStyle: .light)
+        )
         blueLabel.textAlignment = .center
         blueLabel.numberOfLines = 0
         blueLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let blueButton = UIButton(type: .system)
         blueButton.setTitle(L10n.onboardingButton, for: .normal)
-        blueButton.backgroundColor = .blackDay
-        blueButton.setTitleColor(.white, for: .normal)
+        blueButton.backgroundColor = UIColor(
+            named: "blackDay",
+            in: nil,
+            compatibleWith: UITraitCollection(userInterfaceStyle: .light)
+        )
+        let fixedLightColor = UIColor(
+            named: "whiteDay",
+            in: nil,
+            compatibleWith: UITraitCollection(userInterfaceStyle: .light)
+        )
+        blueButton.setTitleColor(fixedLightColor, for: .normal)
         blueButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         blueButton.layer.cornerRadius = 16
         blueButton.translatesAutoresizingMaskIntoConstraints = false
@@ -63,15 +76,23 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         let redLabel = UILabel()
         redLabel.text = L10n.onboardingTitleRed
         redLabel.font = UIFont(name: "SFPro-Bold", size: 32)
-        redLabel.textColor = .blackDay
+        redLabel.textColor = UIColor(
+            named: "blackDay",
+            in: nil,
+            compatibleWith: UITraitCollection(userInterfaceStyle: .light)
+        )
         redLabel.textAlignment = .center
         redLabel.numberOfLines = 0
         redLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let redButton = UIButton(type: .system)
         redButton.setTitle(L10n.onboardingButton, for: .normal)
-        redButton.backgroundColor = .blackDay
-        redButton.setTitleColor(.white, for: .normal)
+        redButton.backgroundColor = UIColor(
+            named: "blackDay",
+            in: nil,
+            compatibleWith: UITraitCollection(userInterfaceStyle: .light)
+        )
+        redButton.setTitleColor(fixedLightColor, for: .normal)
         redButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         redButton.layer.cornerRadius = 16
         redButton.translatesAutoresizingMaskIntoConstraints = false
@@ -127,6 +148,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .light
         dataSource = self
         delegate = self
         

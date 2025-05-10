@@ -86,7 +86,7 @@ final class CreateHabitViewController: UIViewController {
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.categoryCreateButton, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         button.backgroundColor = .grayText
@@ -97,7 +97,7 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupUI()
         setupActions()
         
@@ -225,7 +225,11 @@ final class CreateHabitViewController: UIViewController {
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         
         createButton.isEnabled = nameFilled && categoryChosen && scheduleChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .gray
+        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .grayText
+        
+        let textColorName = createButton.isEnabled ? "whiteDay" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     private func updateScheduleUI() {

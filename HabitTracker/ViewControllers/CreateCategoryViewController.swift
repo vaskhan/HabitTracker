@@ -33,8 +33,8 @@ final class CreateCategoryViewController: UIViewController {
     
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(L10n.categoryCreateButton, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.doneButton, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.backgroundColor = .grayText
         button.layer.cornerRadius = 16
@@ -44,7 +44,7 @@ final class CreateCategoryViewController: UIViewController {
  
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupLayout()
         setupActions()
         enableHideKeyboardOnTap()
@@ -81,6 +81,10 @@ final class CreateCategoryViewController: UIViewController {
         let isFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         createButton.isEnabled = isFilled
         createButton.backgroundColor = isFilled ? .blackDay : .grayText
+        
+        let textColorName = isFilled ? "whiteDay" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     @objc private func createTapped() {

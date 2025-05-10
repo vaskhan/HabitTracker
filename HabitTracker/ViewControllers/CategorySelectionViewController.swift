@@ -42,7 +42,7 @@ final class CategorySelectionViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(L10n.categoryAddButton, for: .normal)
         button.backgroundColor = .blackDay
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.whiteDay, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -59,7 +59,7 @@ final class CategorySelectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         
         setupUI()
         

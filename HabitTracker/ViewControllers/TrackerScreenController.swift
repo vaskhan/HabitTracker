@@ -15,8 +15,8 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     // MARK: - UI Elements
     private let addTrackerButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "buttonAddingLogo")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.accessibilityIdentifier = "addTracker"
+        button.setImage(UIImage(named: "buttonAddingLogo")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .blackDay
         return button
     }()
     
@@ -41,6 +41,16 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         bar.placeholder = L10n.search
         bar.searchBarStyle = .minimal
         bar.backgroundImage = UIImage()
+        bar.searchTextField.backgroundColor = .searchBarBackground
+        
+        if let imageView = bar.searchTextField.leftView as? UIImageView {
+            imageView.tintColor = .searchBarPlaceholder
+        }
+
+        bar.searchTextField.attributedPlaceholder = NSAttributedString(
+            string: "Поиск",
+            attributes: [.foregroundColor: UIColor(named: "searchBarPlaceholder") ?? .gray]
+        )
         return bar
     }()
     
@@ -91,7 +101,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupElements()
         
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)

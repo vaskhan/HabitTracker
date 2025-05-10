@@ -36,7 +36,7 @@ final class TrackerSelectionViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(L10n.habit, for: .normal)
         button.backgroundColor = .blackDay
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.whiteDay, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -46,7 +46,7 @@ final class TrackerSelectionViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(L10n.event, for: .normal)
         button.backgroundColor = .blackDay
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.whiteDay, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -54,7 +54,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupLayout()
         habitButton.addTarget(self, action: #selector(habitTapped), for: .touchUpInside)
         eventButton.addTarget(self, action: #selector(eventTapped), for: .touchUpInside)

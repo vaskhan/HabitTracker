@@ -23,7 +23,7 @@ final class ScheduleViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.doneButton, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.whiteDay, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.backgroundColor = .blackDay
         button.layer.cornerRadius = 16
@@ -41,7 +41,7 @@ final class ScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         
         setupUI()
     }

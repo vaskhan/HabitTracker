@@ -32,3 +32,17 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+extension UIView {
+    func findTextField() -> UITextField? {
+        if let textField = self as? UITextField {
+            return textField
+        }
+        for subview in subviews {
+            if let found = subview.findTextField() {
+                return found
+            }
+        }
+        return nil
+    }
+}
