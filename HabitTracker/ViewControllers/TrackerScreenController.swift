@@ -9,7 +9,7 @@ import UIKit
 
 final class TrackerScreenController: UIViewController, UICollectionViewDelegate {
     
-    private let viewModel: TrackerViewModel
+    let viewModel: TrackerViewModel
     private let categoryViewModel: TrackerCategoryViewModel
     
     // MARK: - UI Elements
