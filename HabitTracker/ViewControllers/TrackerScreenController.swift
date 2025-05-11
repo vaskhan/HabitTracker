@@ -117,8 +117,20 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
                 self?.collectionView.reloadData()
             }
         }
+        
+        searchBar.searchTextField.addTarget(
+            self,
+            action: #selector(searchTextChanged(_:)),
+            for: .editingChanged
+        )
     }
     
+    @objc private func searchTextChanged(_ sender: UITextField) {
+        let text = sender.text ?? ""
+        viewModel.filterTrackers(by: text)
+        collectionView.reloadData()
+    }
+
     @objc private func dateChanged() {
         collectionView.reloadData()
     }

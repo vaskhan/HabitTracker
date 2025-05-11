@@ -11,10 +11,12 @@ final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var onTrackersUpdated: (([TrackerCategory]) -> Void)?
-
+    
     let trackerStore: TrackerStore
     let categoryStore: TrackerCategoryStore
     let recordStore: TrackerRecordStore
+    
+    private var searchText: String = ""
     
     init(trackerStore: TrackerStore,
          categoryStore: TrackerCategoryStore,
@@ -25,6 +27,11 @@ final class TrackerViewModel {
         self.recordStore = recordStore
         
         self.completedTrackers = recordStore.fetchAllRecords()
+    }
+    
+    func filterTrackers(by text: String) {
+        searchText = text.lowercased()
+        loadTrackers()
     }
     
     func numberOfSections(for date: Date) -> Int {
@@ -80,9 +87,18 @@ final class TrackerViewModel {
     }
     
     func visibleCategories(for date: Date) -> [TrackerCategory] {
-        categories.compactMap { category in
-            let trackers = category.trackers.filter { shouldDisplay($0, on: date) }
-            return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
+        let filteredCategories: [TrackerCategory] = categories.compactMap { category in
+            let filteredTrackers = category.trackers
+                .filter { shouldDisplay($0, on: date) }
+                .filter { searchText.isEmpty || $0.name.lowercased().contains(searchText) }
+            
+            return filteredTrackers.isEmpty
+                ? nil
+                : TrackerCategory(title: category.title, trackers: filteredTrackers)
+        }
+        
+        return filteredCategories.sorted {
+            $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
         }
     }
     
