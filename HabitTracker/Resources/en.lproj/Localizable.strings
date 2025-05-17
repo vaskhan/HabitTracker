@@ -59,3 +59,12 @@
 
 // MARK: - Colors
 "color" = "Color";
+
+// MARK: - ContextMenu + Editing
+"save" = "Save";
+"edit_habit" = "Edit Habit";
+"pin" = "Pin";
+"unpin" = "Unpin";
+"edit" = "Edit";
+"delete" = "Delete";
+"confirmDeleteTracker" = "Are you sure you want to delete this tracker?";

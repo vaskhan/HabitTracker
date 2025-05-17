@@ -54,13 +54,21 @@ final class TrackerCell: UICollectionViewCell {
         return view
     }()
     
+    private let pinImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "pin.fill"))
+        imageView.tintColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(cardView)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         
-        [emojiLabel, titleLabel].forEach {
+        [emojiLabel, titleLabel, pinImageView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             cardView.addSubview($0)
         }
@@ -94,6 +102,8 @@ final class TrackerCell: UICollectionViewCell {
         plusButton.setImage(icon, for: .normal)
         plusButton.tintColor = .whiteDay
         plusButton.backgroundColor = tracker.color.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
+        
+        pinImageView.isHidden = !tracker.isPinned
     }
     
     func updateState(isCompletedToday: Bool, completedDays: Int) {
@@ -108,7 +118,17 @@ final class TrackerCell: UICollectionViewCell {
         plusButton.tintColor = .whiteDay
         plusButton.backgroundColor = cardView.backgroundColor?.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
     }
-   
+    
+    func targetedPreview() -> UITargetedPreview {
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        parameters.visiblePath = UIBezierPath(
+            roundedRect: cardView.bounds,
+            cornerRadius: cardView.layer.cornerRadius
+        )
+        return UITargetedPreview(view: cardView, parameters: parameters)
+    }
+
     // MARK: - Layout
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -132,7 +152,12 @@ final class TrackerCell: UICollectionViewCell {
             plusButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor),
             plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             plusButton.widthAnchor.constraint(equalToConstant: 34),
-            plusButton.heightAnchor.constraint(equalToConstant: 34)
+            plusButton.heightAnchor.constraint(equalToConstant: 34),
+            
+            pinImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
+            pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
+            pinImageView.widthAnchor.constraint(equalToConstant: 8),
+            pinImageView.heightAnchor.constraint(equalToConstant: 12)
         ])
     }
     

@@ -31,10 +31,18 @@ internal enum L10n {
   internal static let categoryTitleMissing = L10n.tr("Localizable", "categoryTitleMissing", fallback: "No category")
   /// Color
   internal static let color = L10n.tr("Localizable", "color", fallback: "Color")
+  /// Are you sure you want to delete this tracker?
+  internal static let confirmDeleteTracker = L10n.tr("Localizable", "confirmDeleteTracker", fallback: "Are you sure you want to delete this tracker?")
   /// Create tracker
   internal static let createTrackerTitle = L10n.tr("Localizable", "createTrackerTitle", fallback: "Create tracker")
+  /// Delete
+  internal static let delete = L10n.tr("Localizable", "delete", fallback: "Delete")
   /// Done
   internal static let doneButton = L10n.tr("Localizable", "doneButton", fallback: "Done")
+  /// Edit
+  internal static let edit = L10n.tr("Localizable", "edit", fallback: "Edit")
+  /// Edit Habit
+  internal static let editHabit = L10n.tr("Localizable", "edit_habit", fallback: "Edit Habit")
   /// Irregular event
   internal static let event = L10n.tr("Localizable", "event", fallback: "Irregular event")
   /// Every day
@@ -62,10 +70,14 @@ internal enum L10n {
   internal static let onboardingTitleBlue = L10n.tr("Localizable", "onboardingTitleBlue", fallback: "Track only what you want")
   /// Even if it’s not yoga or liters of water
   internal static let onboardingTitleRed = L10n.tr("Localizable", "onboardingTitleRed", fallback: "Even if it’s not yoga or liters of water")
+  /// Pin
+  internal static let pin = L10n.tr("Localizable", "pin", fallback: "Pin")
   /// Saturday
   internal static let saturdayFull = L10n.tr("Localizable", "saturdayFull", fallback: "Saturday")
   /// Sat
   internal static let saturdayShort = L10n.tr("Localizable", "saturdayShort", fallback: "Sat")
+  /// Save
+  internal static let save = L10n.tr("Localizable", "save", fallback: "Save")
   /// Schedule
   internal static let schedule = L10n.tr("Localizable", "schedule", fallback: "Schedule")
   /// Search
@@ -90,6 +102,8 @@ internal enum L10n {
   internal static let tuesdayFull = L10n.tr("Localizable", "tuesdayFull", fallback: "Tuesday")
   /// Tue
   internal static let tuesdayShort = L10n.tr("Localizable", "tuesdayShort", fallback: "Tue")
+  /// Unpin
+  internal static let unpin = L10n.tr("Localizable", "unpin", fallback: "Unpin")
   /// Wednesday
   internal static let wednesdayFull = L10n.tr("Localizable", "wednesdayFull", fallback: "Wednesday")
   /// Wed

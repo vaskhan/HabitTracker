@@ -59,3 +59,12 @@
 
 // MARK: - Couleurs
 "color" = "Couleur";
+
+// MARK: - ContextMenu + Editing
+"save" = "Enregistrer";
+"edit_habit" = "Modifier l'habitude";
+"pin" = "Épingler";
+"unpin" = "Désépingler";
+"edit" = "Modifier";
+"delete" = "Supprimer";
+"confirmDeleteTracker" = "Êtes-vous sûr de vouloir supprimer ce tracker ?";

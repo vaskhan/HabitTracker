@@ -87,7 +87,7 @@ final class TrackerViewModel {
     }
     
     func visibleCategories(for date: Date) -> [TrackerCategory] {
-        let filteredCategories: [TrackerCategory] = categories.compactMap { category in
+        categories.compactMap { category in
             let filteredTrackers = category.trackers
                 .filter { shouldDisplay($0, on: date) }
                 .filter { searchText.isEmpty || $0.name.lowercased().contains(searchText) }
@@ -95,10 +95,6 @@ final class TrackerViewModel {
             return filteredTrackers.isEmpty
                 ? nil
                 : TrackerCategory(title: category.title, trackers: filteredTrackers)
-        }
-        
-        return filteredCategories.sorted {
-            $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
         }
     }
     
@@ -110,6 +106,16 @@ final class TrackerViewModel {
             let new = TrackerCategory(title: title, trackers: [tracker])
             categories.append(new)
         }
+    }
+    
+    func togglePin(for tracker: Tracker) {
+        trackerStore.updatePinState(for: tracker.id, isPinned: !tracker.isPinned)
+        loadTrackers()
+    }
+    
+    func deleteTracker(for tracker: Tracker) {
+        trackerStore.deleteTracker(for: tracker.id)
+        loadTrackers()
     }
     
     func createTracker(
@@ -136,5 +142,10 @@ final class TrackerViewModel {
     func loadTrackers() {
         categories = trackerStore.fetchTrackersGroupedByCategory()
         onTrackersUpdated?(categories)
+    }
+    
+    func updateTracker(_ tracker: Tracker) {
+        trackerStore.updateTracker(tracker)
+        loadTrackers()
     }
 }

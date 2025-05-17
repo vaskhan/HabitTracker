@@ -6,7 +6,7 @@ target 'HabitTracker' do
   use_frameworks!
 
   # Pods for HabitTracker
-	pod 'AppMetricaAnalytics', '5.10.0'
+	
 
   target 'HabitTrackerTests' do
     inherit! :search_paths

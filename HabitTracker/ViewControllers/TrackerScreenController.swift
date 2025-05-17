@@ -46,9 +46,9 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         if let imageView = bar.searchTextField.leftView as? UIImageView {
             imageView.tintColor = .searchBarPlaceholder
         }
-
+        
         bar.searchTextField.attributedPlaceholder = NSAttributedString(
-            string: "Поиск",
+            string: L10n.search,
             attributes: [.foregroundColor: UIColor(named: "searchBarPlaceholder") ?? .gray]
         )
         return bar
@@ -130,7 +130,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         viewModel.filterTrackers(by: text)
         collectionView.reloadData()
     }
-
+    
     @objc private func dateChanged() {
         collectionView.reloadData()
     }
@@ -288,4 +288,81 @@ extension TrackerScreenController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.bounds.width, height: 30)
     }
     
+    func collectionView(_ collectionView: UICollectionView,
+                        previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard
+            let indexPath = configuration.identifier as? IndexPath,
+            let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
+        else {
+            return nil
+        }
+        
+        return cell.targetedPreview()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        guard
+            let indexPath = configuration.identifier as? IndexPath,
+            let cell = collectionView.cellForItem(at: indexPath) as? TrackerCell
+        else {
+            return nil
+        }
+        
+        return cell.targetedPreview()
+    }
+}
+
+extension TrackerScreenController {
+    
+    // MARK: - Контекстное меню для трекера
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfigurationForItemAt indexPath: IndexPath,
+                        point: CGPoint) -> UIContextMenuConfiguration? {
+        let tracker = viewModel.tracker(at: indexPath, for: currentDate)
+        let isPinned = tracker.isPinned
+        
+        return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { [weak self] _ in
+            let pinAction = UIAction(title: isPinned ? L10n.unpin : L10n.pin) { _ in
+                self?.viewModel.togglePin(for: tracker)
+            }
+            let editAction = UIAction(title: L10n.edit) { [weak self] _ in
+                self?.startEditFlow(for: tracker)
+            }
+            let deleteAction = UIAction(title: L10n.delete, attributes: .destructive) { [weak self] _ in
+                self?.showDeleteConfirmation(for: tracker)
+            }
+            return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+        }
+    }
+    
+    private func findCategoryFor(tracker: Tracker) -> TrackerCategory? {
+        return viewModel.categories.first { category in
+            category.trackers.contains(where: { $0.id == tracker.id })
+        }
+    }
+    
+    func startEditFlow(for tracker: Tracker) {
+        guard findCategoryFor(tracker: tracker) != nil else { return }
+
+        let editVC = EditHabitViewController()
+        editVC.viewModel = viewModel
+        editVC.categoryViewModel = categoryViewModel
+        editVC.editingTracker = tracker
+
+        presentSheet(editVC)
+    }
+    
+    func showDeleteConfirmation(for tracker: Tracker) {
+        let alert = UIAlertController(
+            title: "",
+            message: L10n.confirmDeleteTracker,
+            preferredStyle: .actionSheet
+        )
+        alert.addAction(UIAlertAction(title: L10n.delete, style: .destructive, handler: { [weak self] _ in
+            self?.viewModel.deleteTracker(for: tracker)
+        }))
+        alert.addAction(UIAlertAction(title: L10n.cancelButton, style: .cancel))
+        present(alert, animated: true)
+    }
 }

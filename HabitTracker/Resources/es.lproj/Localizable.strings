@@ -59,3 +59,12 @@
 
 // MARK: - Colores
 "color" = "Color";
+
+// MARK: - ContextMenu + Editing
+"save" = "Guardar";
+"edit_habit" = "Editar hábito";
+"pin" = "Fijar";
+"unpin" = "Desfijar";
+"edit" = "Editar";
+"delete" = "Eliminar";
+"confirmDeleteTracker" = "¿Estás seguro de que quieres eliminar este rastreador?";
