@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		48C413E72DD0C5D5008AAD46 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 48C413E62DD0C5D5008AAD46 /* SnapshotTesting */; };
+		4F75BE612FF6B41CA2AC8C08 /* Pods_HabitTrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6D3608E2DA31E4390634DA8 /* Pods_HabitTrackerTests.framework */; };
+		C05D7F290AEB5485DB574777 /* Pods_HabitTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CB4788DCAF19791473C4BDD /* Pods_HabitTracker.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -21,8 +23,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3AF2C3995C8EECE4FA80FAE8 /* Pods-HabitTrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-HabitTrackerTests/Pods-HabitTrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		488130572D92D2A6003E9ECB /* HabitTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HabitTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C413DC2DD0C4FA008AAD46 /* HabitTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HabitTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E685A1D58D6E4E33E554EC7 /* Pods-HabitTrackerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTrackerTests.release.xcconfig"; path = "Target Support Files/Pods-HabitTrackerTests/Pods-HabitTrackerTests.release.xcconfig"; sourceTree = "<group>"; };
+		9CB4788DCAF19791473C4BDD /* Pods_HabitTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HabitTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6D3608E2DA31E4390634DA8 /* Pods_HabitTrackerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HabitTrackerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B700CDD238726EEFC83FA387 /* Pods-HabitTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTracker.release.xcconfig"; path = "Target Support Files/Pods-HabitTracker/Pods-HabitTracker.release.xcconfig"; sourceTree = "<group>"; };
+		E34029974955B402AFFA9B35 /* Pods-HabitTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HabitTracker.debug.xcconfig"; path = "Target Support Files/Pods-HabitTracker/Pods-HabitTracker.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -46,6 +54,8 @@
 		};
 		48C413DD2DD0C4FA008AAD46 /* HabitTrackerTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = HabitTrackerTests;
 			sourceTree = "<group>";
 		};
@@ -56,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C05D7F290AEB5485DB574777 /* Pods_HabitTracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,12 +75,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				48C413E72DD0C5D5008AAD46 /* SnapshotTesting in Frameworks */,
+				4F75BE612FF6B41CA2AC8C08 /* Pods_HabitTrackerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2845427A7BB138A5562C13D3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E34029974955B402AFFA9B35 /* Pods-HabitTracker.debug.xcconfig */,
+				B700CDD238726EEFC83FA387 /* Pods-HabitTracker.release.xcconfig */,
+				3AF2C3995C8EECE4FA80FAE8 /* Pods-HabitTrackerTests.debug.xcconfig */,
+				5E685A1D58D6E4E33E554EC7 /* Pods-HabitTrackerTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		4881304E2D92D2A6003E9ECB = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +101,7 @@
 				48C413DD2DD0C4FA008AAD46 /* HabitTrackerTests */,
 				48C413E52DD0C5D5008AAD46 /* Frameworks */,
 				488130582D92D2A6003E9ECB /* Products */,
+				2845427A7BB138A5562C13D3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +117,8 @@
 		48C413E52DD0C5D5008AAD46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9CB4788DCAF19791473C4BDD /* Pods_HabitTracker.framework */,
+				A6D3608E2DA31E4390634DA8 /* Pods_HabitTrackerTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -103,9 +130,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4881306A2D92D2A8003E9ECB /* Build configuration list for PBXNativeTarget "HabitTracker" */;
 			buildPhases = (
+				AC9F134F79E340DC6CEEAA78 /* [CP] Check Pods Manifest.lock */,
 				488130532D92D2A6003E9ECB /* Sources */,
 				488130542D92D2A6003E9ECB /* Frameworks */,
 				488130552D92D2A6003E9ECB /* Resources */,
+				6992CA645F625362D33DE8BA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -115,8 +144,6 @@
 				488130592D92D2A6003E9ECB /* HabitTracker */,
 			);
 			name = HabitTracker;
-			packageProductDependencies = (
-			);
 			productName = HabitTracker;
 			productReference = 488130572D92D2A6003E9ECB /* HabitTracker.app */;
 			productType = "com.apple.product-type.application";
@@ -125,6 +152,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 48C413E22DD0C4FA008AAD46 /* Build configuration list for PBXNativeTarget "HabitTrackerTests" */;
 			buildPhases = (
+				007EBC7EDADCDBC8237C5C37 /* [CP] Check Pods Manifest.lock */,
 				48C413D82DD0C4FA008AAD46 /* Sources */,
 				48C413D92DD0C4FA008AAD46 /* Frameworks */,
 				48C413DA2DD0C4FA008AAD46 /* Resources */,
@@ -207,6 +235,70 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		007EBC7EDADCDBC8237C5C37 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HabitTrackerTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6992CA645F625362D33DE8BA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HabitTracker/Pods-HabitTracker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HabitTracker/Pods-HabitTracker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HabitTracker/Pods-HabitTracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AC9F134F79E340DC6CEEAA78 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HabitTracker-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		488130532D92D2A6003E9ECB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -235,6 +327,7 @@
 /* Begin XCBuildConfiguration section */
 		4881306B2D92D2A8003E9ECB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E34029974955B402AFFA9B35 /* Pods-HabitTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -263,6 +356,7 @@
 		};
 		4881306C2D92D2A8003E9ECB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B700CDD238726EEFC83FA387 /* Pods-HabitTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -412,6 +506,7 @@
 		};
 		48C413E32DD0C4FA008AAD46 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3AF2C3995C8EECE4FA80FAE8 /* Pods-HabitTrackerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -431,6 +526,7 @@
 		};
 		48C413E42DD0C4FA008AAD46 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5E685A1D58D6E4E33E554EC7 /* Pods-HabitTrackerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

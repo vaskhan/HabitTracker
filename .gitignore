@@ -1,1 +1,3 @@
 *.xcuserstate
+Pods/
+HabitTracker.xcworkspace
