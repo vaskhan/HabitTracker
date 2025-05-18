@@ -297,7 +297,6 @@ final class EditHabitViewController: UIViewController {
             )
             viewModel.updateTracker(tracker, newCategory: coreDataCategory)
         } else {
-            let newId = UUID()
             viewModel.createTracker(
                 name: name,
                 emoji: emoji,

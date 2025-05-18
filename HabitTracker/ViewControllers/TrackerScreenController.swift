@@ -82,6 +82,36 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         return collectionView
     }()
     
+    let filterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Фильтры", for: .normal)
+        button.backgroundColor = .blueSwitch
+        button.setTitleColor(.systemRed, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.isHidden = true
+        return button
+    }()
+    
+    private let emptyImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "emptyPlaceholder")
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Ничего не найдено"
+        label.font = UIFont(name: "SFPro-Medium", size: 12)
+        label.textColor = .blackDay
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
     private var currentDate: Date {
         Calendar.current.startOfDay(for: datePicker.date)
     }
@@ -111,10 +141,12 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         
         viewModel.loadTrackers()
-        
+        updateFilterButtonState()
         viewModel.onTrackersUpdated = { [weak self] _ in
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
+                self?.updateFilterButtonState()
+                self?.updateEmptyState()
             }
         }
         categoryViewModel.onCategoriesUpdated = { [weak self] _ in
@@ -125,16 +157,24 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
             action: #selector(searchTextChanged(_:)),
             for: .editingChanged
         )
+        filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 66, right: 0)
     }
     
     @objc private func searchTextChanged(_ sender: UITextField) {
         let text = sender.text ?? ""
         viewModel.filterTrackers(by: text)
         collectionView.reloadData()
+        self.updateEmptyState()
     }
     
     @objc private func dateChanged() {
+        if viewModel.currentFilter == .today {
+            viewModel.currentFilter = .all
+        }
         collectionView.reloadData()
+        updateFilterButtonState()
+        updateEmptyState()
     }
     
     @objc private func didTapAddTracker() {
@@ -156,7 +196,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     // MARK: - Setup
     private func setupElements() {
-        [titleLabel, searchBar, backLogo, underLogoLabel, collectionView].forEach {
+        [titleLabel, searchBar, backLogo, underLogoLabel, collectionView, filterButton, emptyImageView, emptyLabel].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -189,10 +229,72 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
             collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 24),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: filterButton.topAnchor, constant: -16),
             
+            filterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 130),
+            filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -130),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButton.heightAnchor.constraint(equalToConstant: 50),
             
+            emptyImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyImageView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 220),
+            emptyImageView.widthAnchor.constraint(equalToConstant: 80),
+            emptyImageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            emptyLabel.topAnchor.constraint(equalTo: emptyImageView.bottomAnchor, constant: 8),
+            emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    @objc private func filterButtonTapped() {
+        let filterVC = TrackerFilterViewController(currentFilter: viewModel.currentFilter)
+        filterVC.onFilterSelected = { [weak self] filter in
+            guard let self = self else { return }
+            self.viewModel.currentFilter = filter
+            if filter == .today {
+                let today = Date()
+                self.datePicker.setDate(today, animated: true)
+            }
+            self.collectionView.reloadData()
+            self.updateFilterButtonState()
+            self.updateEmptyState()
+        }
+        presentSheet(filterVC)
+    }
+    
+    private func updateEmptyState() {
+        let hasAny = viewModel.hasAnyTrackers(for: currentDate)
+        let visible = viewModel.totalVisibleTrackers(for: currentDate)
+        
+        if !hasAny {
+            backLogo.isHidden = false
+            underLogoLabel.isHidden = false
+            emptyImageView.isHidden = true
+            emptyLabel.isHidden = true
+            filterButton.isHidden = true
+        }
+        else if visible == 0 {
+            backLogo.isHidden = true
+            underLogoLabel.isHidden = true
+            emptyImageView.isHidden = false
+            emptyLabel.isHidden = false
+            filterButton.isHidden = false
+        }
+        else {
+            backLogo.isHidden = true
+            underLogoLabel.isHidden = true
+            emptyImageView.isHidden = true
+            emptyLabel.isHidden = true
+            filterButton.isHidden = false
+        }
+    }
+    
+    private func updateFilterButtonState() {
+        filterButton.isHidden = !viewModel.hasAnyTrackers(for: currentDate)
+        filterButton.setTitleColor(
+            viewModel.currentFilter == .all ? .white : .systemRed,
+            for: .normal
+        )
     }
 }
 
@@ -346,12 +448,12 @@ extension TrackerScreenController {
     
     func startEditFlow(for tracker: Tracker) {
         guard findCategoryFor(tracker: tracker) != nil else { return }
-
+        
         let editVC = EditHabitViewController()
         editVC.viewModel = viewModel
         editVC.categoryViewModel = categoryViewModel
         editVC.editingTracker = tracker
-
+        
         presentSheet(editVC)
     }
     

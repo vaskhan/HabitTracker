@@ -11,6 +11,12 @@ final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var onTrackersUpdated: (([TrackerCategory]) -> Void)?
+    var currentFilter: EnumTrackerFilter = .all {
+        didSet {
+            onTrackersUpdated?(filteredCategories(for: selectedDate))
+        }
+    }
+    var selectedDate: Date = Date()
     
     let trackerStore: TrackerStore
     let categoryStore: TrackerCategoryStore
@@ -35,23 +41,23 @@ final class TrackerViewModel {
     }
     
     func numberOfSections(for date: Date) -> Int {
-        visibleCategories(for: date).count
+        filteredCategories(for: date).count
     }
     
     func numberOfItems(in section: Int, for date: Date) -> Int {
-        visibleCategories(for: date)[section].trackers.count
+        filteredCategories(for: date)[section].trackers.count
     }
     
     func tracker(at indexPath: IndexPath, for date: Date) -> Tracker {
-        visibleCategories(for: date)[indexPath.section].trackers[indexPath.item]
+        filteredCategories(for: date)[indexPath.section].trackers[indexPath.item]
     }
     
     func sectionTitle(for section: Int, date: Date) -> String {
-        visibleCategories(for: date)[section].title
+        filteredCategories(for: date)[section].title
     }
     
     func totalVisibleTrackers(for date: Date) -> Int {
-        visibleCategories(for: date).reduce(0) { $0 + $1.trackers.count }
+        filteredCategories(for: date).reduce(0) { $0 + $1.trackers.count }
     }
     
     func toggleTrackerCompletion(trackerID: UUID, on date: Date) {
@@ -93,9 +99,10 @@ final class TrackerViewModel {
                 .filter { searchText.isEmpty || $0.name.lowercased().contains(searchText) }
             
             return filteredTrackers.isEmpty
-                ? nil
-                : TrackerCategory(title: category.title, trackers: filteredTrackers)
+            ? nil
+            : TrackerCategory(title: category.title, trackers: filteredTrackers)
         }
+        
     }
     
     func addTracker(_ tracker: Tracker, toCategoryWithTitle title: String) {
@@ -148,10 +155,39 @@ final class TrackerViewModel {
         trackerStore.updateTracker(tracker, newCategory: newCategory)
         loadTrackers()
     }
-
     
     func trackerExists(_ id: UUID) -> Bool {
         return categories.flatMap { $0.trackers }.contains(where: { $0.id == id })
     }
-
+    
+    func hasAnyTrackers(for date: Date) -> Bool {
+        let categories = categories
+        let count = categories.reduce(0) { $0 + $1.trackers.count }
+        return count > 0
+    }
+    
+    func filteredCategories(for date: Date) -> [TrackerCategory] {
+        let categories = visibleCategories(for: date)
+        switch currentFilter {
+        case .all:
+            return categories
+        case .today:
+            let today = Calendar.current.startOfDay(for: Date())
+            if Calendar.current.isDate(date, inSameDayAs: today) {
+                return categories
+            } else {
+                return []
+            }
+        case .completed:
+            return categories.compactMap { category in
+                let trackers = category.trackers.filter { isTrackerCompleted($0.id, on: date) }
+                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
+            }
+        case .uncompleted:
+            return categories.compactMap { category in
+                let trackers = category.trackers.filter { !isTrackerCompleted($0.id, on: date) }
+                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
+            }
+        }
+    }
 }
