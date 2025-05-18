@@ -109,18 +109,30 @@ final class TrackerStore {
         }
     }
     
-    func updateTracker(_ tracker: Tracker) {
+    func updateTracker(_ tracker: Tracker, newCategory: TrackerCategoryCoreData?) {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
-        
+
         if let existing = try? context.fetch(request).first {
             existing.name = tracker.name
             existing.emoji = tracker.emoji
             existing.color = tracker.color.toHexString()
             existing.schedule = tracker.schedule as NSObject
             existing.isPinned = tracker.isPinned
+            
+            if let newCategory = newCategory {
+                existing.category = newCategory
+            }
+
             saveContext()
         }
+    }
+
+    
+    func trackerExists(withId id: UUID) -> Bool {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        return (try? context.count(for: request)) ?? 0 > 0
     }
 
     func saveContext() {

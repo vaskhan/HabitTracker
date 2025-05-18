@@ -9,11 +9,16 @@ import UIKit
 
 final class EditHabitViewController: UIViewController {
     
-    // MARK: - Public
     var onCreateTracker: ((TrackerCategory) -> Void)?
     var viewModel: TrackerViewModel?
     var categoryViewModel: TrackerCategoryViewModel?
     var editingTracker: Tracker?
+    
+    private var selectedCoreDataCategory: TrackerCategoryCoreData?
+    private var counterTopConstraint: NSLayoutConstraint?
+    private var nameTopToCounterConstraint: NSLayoutConstraint?
+    private var nameTopToTitleConstraint: NSLayoutConstraint?
+    private var scheduleButtonHeightConstraint: NSLayoutConstraint?
     
     private var selectedCategory: TrackerCategory? {
         didSet {
@@ -109,34 +114,31 @@ final class EditHabitViewController: UIViewController {
         setupUI()
         setupActions()
         
-        updateCategoryUI()
-        updateCreateButtonState()
-        nameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        enableHideKeyboardOnTap()
-        scrollView.keyboardDismissMode = .onDrag
         emojiAndColorPicker.onChange = { [weak self] in
             self?.updateCreateButtonState()
         }
         
         if let tracker = editingTracker {
             titleLabel.text = L10n.editHabit
-            let completedDays = viewModel?.completedDays(for: tracker.id) ?? 0
             counterLabel.text = String.localizedStringWithFormat(
                 NSLocalizedString("numberOfDays", comment: ""),
-                completedDays
+                viewModel?.completedDays(for: tracker.id) ?? 0
             )
             nameField.text = tracker.name
             selectedSchedule = tracker.schedule
             emojiAndColorPicker.selectedEmoji = tracker.emoji
             emojiAndColorPicker.selectedColor = tracker.color
-            updateScheduleUI()
-            updateCreateButtonState()
             
-            if let category = viewModel?.categories.first(where: { $0.trackers.contains(where: { $0.id == tracker.id }) }) {
+            if let category = viewModel?.categories.first(where: { $0.trackers.contains(where: { $0.id == tracker.id }) }),
+               let coreCategory = viewModel?.categoryStore.fetchCategory(with: category.title) {
                 selectedCategory = category
-                updateCategoryUI()
+                selectedCoreDataCategory = coreCategory
+            } else {
+                dismiss(animated: true)
             }
         }
+        hideElements()
+        updateCreateButtonState()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -146,7 +148,23 @@ final class EditHabitViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        if let tracker = editingTracker,
+           !(viewModel?.trackerStore.trackerExists(withId: tracker.id) ?? true) {
+            viewModel?.deleteTracker(for: tracker)
+        }
+    }
+    
+    private func hideElements() {
+        let isIrregular = editingTracker?.schedule.isEmpty ?? false
+        
+        counterLabel.isHidden = isIrregular
+        scheduleButtonView.isHidden = isIrregular
+        dividerView.isHidden = isIrregular
+        
+        nameTopToCounterConstraint?.isActive = !isIrregular
+        nameTopToTitleConstraint?.isActive = isIrregular
+        scheduleButtonHeightConstraint?.constant = isIrregular ? 0 : 75
     }
     
     // MARK: - Setup
@@ -181,14 +199,22 @@ final class EditHabitViewController: UIViewController {
             optionContainerView.addSubview($0)
         }
         
+        counterTopConstraint = counterLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24)
+        counterTopConstraint?.isActive = true
+        
+        nameTopToCounterConstraint = nameField.topAnchor.constraint(equalTo: counterLabel.bottomAnchor, constant: 40)
+        nameTopToTitleConstraint = nameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40)
+        nameTopToCounterConstraint?.isActive = true
+        
+        scheduleButtonHeightConstraint = scheduleButtonView.heightAnchor.constraint(equalToConstant: 75)
+        scheduleButtonHeightConstraint?.isActive = true
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 26),
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            counterLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 38),
             counterLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            nameField.topAnchor.constraint(equalTo: counterLabel.bottomAnchor, constant: 40),
             nameField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nameField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameField.heightAnchor.constraint(equalToConstant: 75),
@@ -210,7 +236,6 @@ final class EditHabitViewController: UIViewController {
             scheduleButtonView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             scheduleButtonView.leadingAnchor.constraint(equalTo: optionContainerView.leadingAnchor),
             scheduleButtonView.trailingAnchor.constraint(equalTo: optionContainerView.trailingAnchor),
-            scheduleButtonView.heightAnchor.constraint(equalToConstant: 75),
             scheduleButtonView.bottomAnchor.constraint(equalTo: optionContainerView.bottomAnchor),
             
             emojiAndColorPicker.topAnchor.constraint(equalTo: optionContainerView.bottomAnchor, constant: 32),
@@ -233,49 +258,13 @@ final class EditHabitViewController: UIViewController {
     
     
     private func setupActions() {
-        let categoryTap = UITapGestureRecognizer(target: self, action: #selector(categoryTapped))
-        categoryButtonView.addGestureRecognizer(categoryTap)
-        
-        let scheduleTap = UITapGestureRecognizer(target: self, action: #selector(scheduleTapped))
-        scheduleButtonView.addGestureRecognizer(scheduleTap)
-        
+        categoryButtonView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(categoryTapped)))
+        scheduleButtonView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(scheduleTapped)))
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
+        nameField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
-    private func updateCategoryUI() {
-        categoryButtonView.updateSubtitle(selectedCategory?.title ?? "")
-    }
-    
-    private func updateCreateButtonState() {
-        let nameFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        let categoryChosen = selectedCategory != nil
-        let scheduleChosen = !selectedSchedule.isEmpty
-        let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
-        let colorChosen = emojiAndColorPicker.selectedColor != nil
-        
-        saveButton.isEnabled = nameFilled && categoryChosen && scheduleChosen && emojiChosen && colorChosen
-        saveButton.backgroundColor = saveButton.isEnabled ? .blackDay : .grayText
-        
-        let textColorName = saveButton.isEnabled ? "whiteDay" : "justWhite"
-        let textColor = UIColor(named: textColorName)
-        saveButton.setTitleColor(textColor, for: .normal)
-    }
-    
-    private func updateScheduleUI() {
-        if selectedSchedule.isEmpty {
-            scheduleButtonView.updateSubtitle(nil)
-        } else if selectedSchedule.count == DayOfWeek.allCases.count {
-            scheduleButtonView.updateSubtitle(L10n.everyDay)
-        } else {
-            let days = selectedSchedule
-                .map { $0.shortNameDay }
-                .joined(separator: ", ")
-            scheduleButtonView.updateSubtitle(days)
-        }
-    }
-    
-    // MARK: - Actions
     @objc private func textFieldDidChange() {
         updateCreateButtonState()
     }
@@ -290,14 +279,15 @@ final class EditHabitViewController: UIViewController {
             let color = emojiAndColorPicker.selectedColor,
             let emoji = emojiAndColorPicker.selectedEmoji,
             let selectedCategory = selectedCategory,
+            let coreDataCategory = selectedCoreDataCategory,
             let viewModel = viewModel
         else { return }
         
-        let schedule = selectedSchedule
-        let tracker: Tracker
+        let schedule = editingTracker?.schedule.isEmpty == true ? [] : selectedSchedule
         
-        if let editing = editingTracker {
-            tracker = Tracker(
+        if let editing = editingTracker,
+           viewModel.trackerStore.trackerExists(withId: editing.id) {
+            let tracker = Tracker(
                 id: editing.id,
                 name: name,
                 color: color,
@@ -305,10 +295,9 @@ final class EditHabitViewController: UIViewController {
                 schedule: schedule,
                 isPinned: editing.isPinned
             )
-            viewModel.updateTracker(tracker)
+            viewModel.updateTracker(tracker, newCategory: coreDataCategory)
         } else {
-            let coreDataCategory = viewModel.categoryStore.createCategoryIfNeeded(title: selectedCategory.title)
-            
+            let newId = UUID()
             viewModel.createTracker(
                 name: name,
                 emoji: emoji,
@@ -327,8 +316,7 @@ final class EditHabitViewController: UIViewController {
         let categoryVC = CategorySelectionViewController(viewModel: viewModel)
         categoryVC.onCategorySelected = { [weak self] selectedCategory in
             self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? L10n.trackerNameMissing, trackers: [])
-            self?.updateCategoryUI()
-            self?.updateCreateButtonState()
+            self?.selectedCoreDataCategory = selectedCategory
         }
         presentSheet(categoryVC)
     }
@@ -336,12 +324,27 @@ final class EditHabitViewController: UIViewController {
     @objc private func scheduleTapped() {
         let scheduleVC = ScheduleViewController()
         scheduleVC.selectedDays = Set(selectedSchedule)
-        
         scheduleVC.onSchedulePicked = { [weak self] selected in
             self?.selectedSchedule = selected
-            self?.updateScheduleUI()
-            self?.updateCreateButtonState()
         }
         presentSheet(scheduleVC)
+    }
+    
+    private func updateCategoryUI() {
+        categoryButtonView.updateSubtitle(selectedCategory?.title ?? "")
+    }
+    
+    private func updateScheduleUI() {
+        scheduleButtonView.updateSubtitle(selectedSchedule.isEmpty ? nil : selectedSchedule.map { $0.shortNameDay }.joined(separator: ", "))
+    }
+    
+    private func updateCreateButtonState() {
+        let nameFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let categoryChosen = selectedCategory != nil
+        let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
+        let colorChosen = emojiAndColorPicker.selectedColor != nil
+        let scheduleValid = editingTracker?.schedule.isEmpty == true || !selectedSchedule.isEmpty
+        saveButton.isEnabled = nameFilled && categoryChosen && scheduleValid && emojiChosen && colorChosen
+        saveButton.backgroundColor = saveButton.isEnabled ? .blackDay : .grayText
     }
 }

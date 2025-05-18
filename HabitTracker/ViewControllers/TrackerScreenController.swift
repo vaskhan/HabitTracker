@@ -117,7 +117,9 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
                 self?.collectionView.reloadData()
             }
         }
-        
+        categoryViewModel.onCategoriesUpdated = { [weak self] _ in
+            self?.viewModel.loadTrackers()
+        }
         searchBar.searchTextField.addTarget(
             self,
             action: #selector(searchTextChanged(_:)),

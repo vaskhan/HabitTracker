@@ -57,4 +57,25 @@ final class TrackerCategoryStore {
             print("Ошибка сохранения контекста категории: \(error)")
         }
     }
+    
+    func deleteCategory(_ category: TrackerCategoryCoreData) {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "category == %@", category)
+
+        if let trackers = try? context.fetch(request) {
+            for tracker in trackers {
+                context.delete(tracker)
+            }
+        }
+
+        context.delete(category)
+        saveContext()
+        notifyObservers()
+    }
+    
+    func renameCategory(_ category: TrackerCategoryCoreData, to newTitle: String) {
+        category.title = newTitle
+        saveContext()
+        notifyObservers()
+    }
 }

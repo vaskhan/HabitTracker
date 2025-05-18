@@ -144,8 +144,14 @@ final class TrackerViewModel {
         onTrackersUpdated?(categories)
     }
     
-    func updateTracker(_ tracker: Tracker) {
-        trackerStore.updateTracker(tracker)
+    func updateTracker(_ tracker: Tracker, newCategory: TrackerCategoryCoreData?) {
+        trackerStore.updateTracker(tracker, newCategory: newCategory)
         loadTrackers()
     }
+
+    
+    func trackerExists(_ id: UUID) -> Bool {
+        return categories.flatMap { $0.trackers }.contains(where: { $0.id == id })
+    }
+
 }
