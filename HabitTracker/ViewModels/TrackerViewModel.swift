@@ -11,6 +11,7 @@ final class TrackerViewModel {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     var onTrackersUpdated: (([TrackerCategory]) -> Void)?
+    var onStatisticUpdate: ((StatisticViewModel) -> Void)?
     var currentFilter: EnumTrackerFilter = .all {
         didSet {
             onTrackersUpdated?(filteredCategories(for: selectedDate))
@@ -70,6 +71,7 @@ final class TrackerViewModel {
             recordStore.addRecord(record)
             completedTrackers.append(record)
         }
+        notifyStatisticUpdate()
     }
     
     func completedDays(for trackerID: UUID) -> Int {
@@ -118,11 +120,13 @@ final class TrackerViewModel {
     func togglePin(for tracker: Tracker) {
         trackerStore.updatePinState(for: tracker.id, isPinned: !tracker.isPinned)
         loadTrackers()
+        notifyStatisticUpdate()
     }
     
     func deleteTracker(for tracker: Tracker) {
         trackerStore.deleteTracker(for: tracker.id)
         loadTrackers()
+        notifyStatisticUpdate()
     }
     
     func createTracker(
@@ -144,6 +148,7 @@ final class TrackerViewModel {
             category: coreDataCategory
         )
         loadTrackers()
+        notifyStatisticUpdate()
     }
     
     func loadTrackers() {
@@ -154,6 +159,7 @@ final class TrackerViewModel {
     func updateTracker(_ tracker: Tracker, newCategory: TrackerCategoryCoreData?) {
         trackerStore.updateTracker(tracker, newCategory: newCategory)
         loadTrackers()
+        notifyStatisticUpdate()
     }
     
     func trackerExists(_ id: UUID) -> Bool {
@@ -189,5 +195,11 @@ final class TrackerViewModel {
                 return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
             }
         }
+    }
+    
+    private func notifyStatisticUpdate() {
+        let allTrackers = categories.flatMap { $0.trackers }
+        let statVM = StatisticViewModel(trackers: allTrackers, records: completedTrackers)
+        onStatisticUpdate?(statVM)
     }
 }

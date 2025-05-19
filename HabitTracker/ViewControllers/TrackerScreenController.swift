@@ -82,7 +82,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         return collectionView
     }()
     
-    let filterButton: UIButton = {
+    private let filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Фильтры", for: .normal)
         button.backgroundColor = .blueSwitch
