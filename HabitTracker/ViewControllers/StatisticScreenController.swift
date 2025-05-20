@@ -29,7 +29,7 @@ final class StatisticScreenController: UIViewController {
     
     private let underLogoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Анализировать пока нечего"
+        label.text = L10n.nothingToAnalyze
         label.font = UIFont(name: "SFPro-Medium", size: 12)
         label.textColor = .blackDay
         return label
@@ -69,10 +69,10 @@ final class StatisticScreenController: UIViewController {
             underLogoLabel.isHidden = true
             
             statCards = [
-                StatisticCardView(number: viewModel.bestPeriod, description: "Лучший период"),
-                StatisticCardView(number: viewModel.idealDays, description: "Идеальные дни"),
-                StatisticCardView(number: viewModel.completedTrackers, description: "Трекеров завершено"),
-                StatisticCardView(number: viewModel.averageValue, description: "Среднее значение")
+                StatisticCardView(number: viewModel.bestPeriod, description: L10n.bestPeriod),
+                StatisticCardView(number: viewModel.idealDays, description: L10n.idealDays),
+                StatisticCardView(number: viewModel.completedTrackers, description: L10n.trackersCompleted),
+                StatisticCardView(number: viewModel.averageValue, description: L10n.averageValue)
             ]
             
             let stackView = UIStackView(arrangedSubviews: statCards)

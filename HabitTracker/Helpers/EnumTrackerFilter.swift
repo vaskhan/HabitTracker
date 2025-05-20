@@ -14,10 +14,10 @@ enum EnumTrackerFilter: Int, CaseIterable {
 
     var title: String {
         switch self {
-        case .all: return "Все трекеры"
-        case .today: return "Трекеры на сегодня"
-        case .completed: return "Завершенные"
-        case .uncompleted: return "Не завершенные"
+        case .all: return L10n.allTrackers
+        case .today: return L10n.trackersToday
+        case .completed: return L10n.completed
+        case .uncompleted: return L10n.uncompleted
         }
     }
 }

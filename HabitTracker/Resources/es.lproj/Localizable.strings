@@ -68,3 +68,17 @@
 "edit" = "Editar";
 "delete" = "Eliminar";
 "confirmDeleteTracker" = "¿Estás seguro de que quieres eliminar este rastreador?";
+
+"all_trackers" = "Todos los trackers";
+"trackers_today" = "Trackers para hoy";
+"completed" = "Completados";
+"uncompleted" = "No completados";
+"edit_category" = "Editar categoría";
+"nothing_to_analyze" = "Nada que analizar por ahora";
+"best_period" = "Mejor período";
+"ideal_days" = "Días ideales";
+"trackers_completed" = "Trackers completados";
+"average_value" = "Valor promedio";
+"filters" = "Filtros";
+"nothing_found" = "Nada encontrado";
+"confirm_delete_category" = "¿Realmente quieres eliminar esta categoría?";

@@ -345,5 +345,8 @@ final class EditHabitViewController: UIViewController {
         let scheduleValid = editingTracker?.schedule.isEmpty == true || !selectedSchedule.isEmpty
         saveButton.isEnabled = nameFilled && categoryChosen && scheduleValid && emojiChosen && colorChosen
         saveButton.backgroundColor = saveButton.isEnabled ? .blackDay : .grayText
+        let textColorName = saveButton.isEnabled ? "whiteDay" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        saveButton.setTitleColor(textColor, for: .normal)
     }
 }

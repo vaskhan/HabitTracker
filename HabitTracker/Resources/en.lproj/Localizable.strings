@@ -68,3 +68,17 @@
 "edit" = "Edit";
 "delete" = "Delete";
 "confirmDeleteTracker" = "Are you sure you want to delete this tracker?";
+
+"all_trackers" = "All trackers";
+"trackers_today" = "Trackers for today";
+"completed" = "Completed";
+"uncompleted" = "Uncompleted";
+"edit_category" = "Edit category";
+"nothing_to_analyze" = "Nothing to analyze yet";
+"best_period" = "Best period";
+"ideal_days" = "Ideal days";
+"trackers_completed" = "Trackers completed";
+"average_value" = "Average value";
+"filters" = "Filters";
+"nothing_found" = "Nothing found";
+"confirm_delete_category" = "Do you really want to delete this category?";

@@ -16,7 +16,7 @@ final class TrackerFilterViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Фильтры"
+        label.text = L10n.filters
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textColor = .blackDay
         label.textAlignment = .center

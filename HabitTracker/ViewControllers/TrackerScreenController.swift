@@ -84,7 +84,8 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private let filterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(L10n.filters, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
         button.backgroundColor = .blueSwitch
         button.setTitleColor(.systemRed, for: .selected)
         button.setTitleColor(.white, for: .normal)
@@ -104,7 +105,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private let emptyLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ничего не найдено"
+        label.text = L10n.nothingFound
         label.font = UIFont(name: "SFPro-Medium", size: 12)
         label.textColor = .blackDay
         label.textAlignment = .center
@@ -161,6 +162,16 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 66, right: 0)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        AnalyticsService.shared.sendEvent(event: "open", screen: "Main")
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        AnalyticsService.shared.sendEvent(event: "close", screen: "Main")
+    }
+
     @objc private func searchTextChanged(_ sender: UITextField) {
         let text = sender.text ?? ""
         viewModel.filterTrackers(by: text)
@@ -191,6 +202,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
             self.viewModel.loadTrackers()
         }
         presentSheet(createTrackerSelection)
+        AnalyticsService.shared.sendEvent(event: "click", screen: "Main", item: "add_track")
     }
     
     
@@ -260,6 +272,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
             self.updateEmptyState()
         }
         presentSheet(filterVC)
+        AnalyticsService.shared.sendEvent(event: "click", screen: "Main", item: "filter")
     }
     
     private func updateEmptyState() {
@@ -330,6 +343,8 @@ extension TrackerScreenController: UICollectionViewDataSource {
             guard self.currentDate <= today else { return }
             
             self.viewModel.toggleTrackerCompletion(trackerID: tracker.id, on: self.currentDate)
+            AnalyticsService.shared.sendEvent(event: "click", screen: "Main", item: "track")
+
             if let cell = self.collectionView.cellForItem(at: indexPath) as? TrackerCell {
                 let updatedCompletedDays = self.viewModel.completedDays(for: tracker.id)
                 let updatedIsCompleted = self.viewModel.isTrackerCompleted(tracker.id, on: self.currentDate)
@@ -432,9 +447,11 @@ extension TrackerScreenController {
             }
             let editAction = UIAction(title: L10n.edit) { [weak self] _ in
                 self?.startEditFlow(for: tracker)
+                AnalyticsService.shared.sendEvent(event: "click", screen: "Main", item: "edit")
             }
             let deleteAction = UIAction(title: L10n.delete, attributes: .destructive) { [weak self] _ in
                 self?.showDeleteConfirmation(for: tracker)
+                AnalyticsService.shared.sendEvent(event: "click", screen: "Main", item: "delete")
             }
             return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
         }

@@ -68,3 +68,17 @@
 "edit" = "Modifier";
 "delete" = "Supprimer";
 "confirmDeleteTracker" = "Êtes-vous sûr de vouloir supprimer ce tracker ?";
+
+"all_trackers" = "Tous les trackers";
+"trackers_today" = "Trackers pour aujourd'hui";
+"completed" = "Terminés";
+"uncompleted" = "Non terminés";
+"edit_category" = "Modifier la catégorie";
+"nothing_to_analyze" = "Rien à analyser pour le moment";
+"best_period" = "Meilleure période";
+"ideal_days" = "Jours idéaux";
+"trackers_completed" = "Trackers terminés";
+"average_value" = "Valeur moyenne";
+"filters" = "Filtres";
+"nothing_found" = "Aucun résultat";
+"confirm_delete_category" = "Voulez-vous vraiment supprimer cette catégorie ?";

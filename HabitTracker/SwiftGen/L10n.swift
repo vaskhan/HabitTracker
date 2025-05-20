@@ -10,8 +10,14 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+  /// All trackers
+  internal static let allTrackers = L10n.tr("Localizable", "all_trackers", fallback: "All trackers")
+  /// Average value
+  internal static let averageValue = L10n.tr("Localizable", "average_value", fallback: "Average value")
   /// What would you like to track?
   internal static let baseScreenPrompt = L10n.tr("Localizable", "baseScreenPrompt", fallback: "What would you like to track?")
+  /// Best period
+  internal static let bestPeriod = L10n.tr("Localizable", "best_period", fallback: "Best period")
   /// Cancel
   internal static let cancelButton = L10n.tr("Localizable", "cancelButton", fallback: "Cancel")
   /// Add category
@@ -31,6 +37,10 @@ internal enum L10n {
   internal static let categoryTitleMissing = L10n.tr("Localizable", "categoryTitleMissing", fallback: "No category")
   /// Color
   internal static let color = L10n.tr("Localizable", "color", fallback: "Color")
+  /// Completed
+  internal static let completed = L10n.tr("Localizable", "completed", fallback: "Completed")
+  /// Do you really want to delete this category?
+  internal static let confirmDeleteCategory = L10n.tr("Localizable", "confirm_delete_category", fallback: "Do you really want to delete this category?")
   /// Are you sure you want to delete this tracker?
   internal static let confirmDeleteTracker = L10n.tr("Localizable", "confirmDeleteTracker", fallback: "Are you sure you want to delete this tracker?")
   /// Create tracker
@@ -41,18 +51,24 @@ internal enum L10n {
   internal static let doneButton = L10n.tr("Localizable", "doneButton", fallback: "Done")
   /// Edit
   internal static let edit = L10n.tr("Localizable", "edit", fallback: "Edit")
+  /// Edit category
+  internal static let editCategory = L10n.tr("Localizable", "edit_category", fallback: "Edit category")
   /// Edit Habit
   internal static let editHabit = L10n.tr("Localizable", "edit_habit", fallback: "Edit Habit")
   /// Irregular event
   internal static let event = L10n.tr("Localizable", "event", fallback: "Irregular event")
   /// Every day
   internal static let everyDay = L10n.tr("Localizable", "everyDay", fallback: "Every day")
+  /// Filters
+  internal static let filters = L10n.tr("Localizable", "filters", fallback: "Filters")
   /// Friday
   internal static let fridayFull = L10n.tr("Localizable", "fridayFull", fallback: "Friday")
   /// Fri
   internal static let fridayShort = L10n.tr("Localizable", "fridayShort", fallback: "Fri")
   /// Habit
   internal static let habit = L10n.tr("Localizable", "habit", fallback: "Habit")
+  /// Ideal days
+  internal static let idealDays = L10n.tr("Localizable", "ideal_days", fallback: "Ideal days")
   /// Localizable.strings (English)
   ///   HabitTracker
   /// 
@@ -64,6 +80,10 @@ internal enum L10n {
   internal static let newEventButton = L10n.tr("Localizable", "newEventButton", fallback: "New irregular event")
   /// New habit
   internal static let newHabitButton = L10n.tr("Localizable", "newHabitButton", fallback: "New habit")
+  /// Nothing found
+  internal static let nothingFound = L10n.tr("Localizable", "nothing_found", fallback: "Nothing found")
+  /// Nothing to analyze yet
+  internal static let nothingToAnalyze = L10n.tr("Localizable", "nothing_to_analyze", fallback: "Nothing to analyze yet")
   /// Now that’s technology!
   internal static let onboardingButton = L10n.tr("Localizable", "onboardingButton", fallback: "Now that’s technology!")
   /// Track only what you want
@@ -98,10 +118,16 @@ internal enum L10n {
   internal static let trackerNamePlaceholder = L10n.tr("Localizable", "trackerNamePlaceholder", fallback: "Enter tracker name")
   /// Trackers
   internal static let trackers = L10n.tr("Localizable", "trackers", fallback: "Trackers")
+  /// Trackers completed
+  internal static let trackersCompleted = L10n.tr("Localizable", "trackers_completed", fallback: "Trackers completed")
+  /// Trackers for today
+  internal static let trackersToday = L10n.tr("Localizable", "trackers_today", fallback: "Trackers for today")
   /// Tuesday
   internal static let tuesdayFull = L10n.tr("Localizable", "tuesdayFull", fallback: "Tuesday")
   /// Tue
   internal static let tuesdayShort = L10n.tr("Localizable", "tuesdayShort", fallback: "Tue")
+  /// Uncompleted
+  internal static let uncompleted = L10n.tr("Localizable", "uncompleted", fallback: "Uncompleted")
   /// Unpin
   internal static let unpin = L10n.tr("Localizable", "unpin", fallback: "Unpin")
   /// Wednesday

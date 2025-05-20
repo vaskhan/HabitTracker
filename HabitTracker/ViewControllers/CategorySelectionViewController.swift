@@ -185,7 +185,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     private func confirmCategoryDeletion(_ category: TrackerCategoryCoreData) {
-        let alert = UIAlertController(title: "Эта категория точно не нужна?", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: L10n.confirmDeleteCategory, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: L10n.delete, style: .destructive) { _ in
             self.viewModel.categoryStore.deleteCategory(category)
             self.viewModel.loadCategories()

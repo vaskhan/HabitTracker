@@ -14,7 +14,7 @@ final class EditCategoryViewController: UIViewController {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Редактирование категории"
+        label.text = L10n.editCategory
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textColor = .blackDay
         label.textAlignment = .center

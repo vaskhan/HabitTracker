@@ -67,3 +67,17 @@
 "edit" = "Редактировать";
 "delete" = "Удалить";
 "confirmDeleteTracker" = "Уверены, что хотите удалить трекер?";
+
+"all_trackers" = "Все трекеры";
+"trackers_today" = "Трекеры на сегодня";
+"completed" = "Завершенные";
+"uncompleted" = "Не завершенные";
+"edit_category" = "Редактирование категории";
+"nothing_to_analyze" = "Анализировать пока нечего";
+"best_period" = "Лучший период";
+"ideal_days" = "Идеальные дни";
+"trackers_completed" = "Трекеров завершено";
+"average_value" = "Среднее значение";
+"filters" = "Фильтры";
+"nothing_found" = "Ничего не найдено";
+"confirm_delete_category" = "Эта категория точно не нужна?";

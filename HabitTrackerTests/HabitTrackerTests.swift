@@ -14,7 +14,7 @@ final class TrackerScreenSnapshotTests: XCTestCase {
     
     func testTrackerScreenForLightAndDarkMode() {
         let container = DependencyInjectionContainer()
-        let vc = container.makeTrackerScreenController()
+        let vc = container.makeTrackerScreenController(statisticsCallback: { _ in })
         let nav = UINavigationController(rootViewController: vc)
         
         if let trackerVC = vc as? TrackerScreenController {
