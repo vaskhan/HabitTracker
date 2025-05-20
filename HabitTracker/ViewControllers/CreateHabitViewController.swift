@@ -227,7 +227,7 @@ final class CreateHabitViewController: UIViewController {
         createButton.isEnabled = nameFilled && categoryChosen && scheduleChosen && emojiChosen && colorChosen
         createButton.backgroundColor = createButton.isEnabled ? .blackDayNew : .grayText
         
-        let textColorName = createButton.isEnabled ? "whiteDay" : "justWhite"
+        let textColorName = createButton.isEnabled ? "whiteDayNew" : "justWhite"
         let textColor = UIColor(named: textColorName)
         createButton.setTitleColor(textColor, for: .normal)
     }

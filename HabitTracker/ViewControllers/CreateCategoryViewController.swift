@@ -82,7 +82,7 @@ final class CreateCategoryViewController: UIViewController {
         createButton.isEnabled = isFilled
         createButton.backgroundColor = isFilled ? .blackDayNew : .grayText
         
-        let textColorName = isFilled ? "whiteDay" : "justWhite"
+        let textColorName = isFilled ? "whiteDayNew" : "justWhite"
         let textColor = UIColor(named: textColorName)
         createButton.setTitleColor(textColor, for: .normal)
     }
