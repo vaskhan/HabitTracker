@@ -11,7 +11,9 @@ final class StatisticScreenController: UIViewController {
     
     private var viewModel: StatisticViewModel
     private var statCards: [StatisticCardView] = []
-    private var statStackView: UIStackView?
+    private var statStackView: UIStackView!
+    private var statsTopConstraint: NSLayoutConstraint!
+    private var placeholderTopConstraint: NSLayoutConstraint!
     
     private let titleLabel: UILabel = {
         let title = UILabel()
@@ -34,7 +36,7 @@ final class StatisticScreenController: UIViewController {
         label.textColor = .blackDay
         return label
     }()
-    
+
     init(viewModel: StatisticViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -49,69 +51,78 @@ final class StatisticScreenController: UIViewController {
         view.backgroundColor = .whiteDay
         setupElements()
         setupConstraints()
+        updateViews()
     }
     
     func update(with viewModel: StatisticViewModel) {
         self.viewModel = viewModel
-        statStackView?.removeFromSuperview()
-        backgroundLogo.removeFromSuperview()
-        underLogoLabel.removeFromSuperview()
-        setupElements()
-        setupConstraints()
+        guard isViewLoaded else { return }
+        updateCards()
+        updateViews()
     }
-    
+
     private func setupElements() {
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        if viewModel.hasStatistics {
-            backgroundLogo.isHidden = true
-            underLogoLabel.isHidden = true
-            
-            statCards = [
-                StatisticCardView(number: viewModel.bestPeriod, description: L10n.bestPeriod),
-                StatisticCardView(number: viewModel.idealDays, description: L10n.idealDays),
-                StatisticCardView(number: viewModel.completedTrackers, description: L10n.trackersCompleted),
-                StatisticCardView(number: viewModel.averageValue, description: L10n.averageValue)
-            ]
-            
-            let stackView = UIStackView(arrangedSubviews: statCards)
-            stackView.axis = .vertical
-            stackView.spacing = 12
-            view.addSubview(stackView)
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            self.statStackView = stackView
-        } else {
-            view.addSubview(backgroundLogo)
-            view.addSubview(underLogoLabel)
-            backgroundLogo.translatesAutoresizingMaskIntoConstraints = false
-            underLogoLabel.translatesAutoresizingMaskIntoConstraints = false
-        }
+        view.addSubview(backgroundLogo)
+        backgroundLogo.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(underLogoLabel)
+        underLogoLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        statCards = [
+            StatisticCardView(number: viewModel.bestPeriod, description: L10n.bestPeriod),
+            StatisticCardView(number: viewModel.idealDays, description: L10n.idealDays),
+            StatisticCardView(number: viewModel.completedTrackers, description: L10n.trackersCompleted),
+            StatisticCardView(number: viewModel.averageValue, description: L10n.averageValue)
+        ]
+
+        statStackView = UIStackView(arrangedSubviews: statCards)
+        statStackView.axis = .vertical
+        statStackView.spacing = 12
+        statStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(statStackView)
     }
     
+    private func updateCards() {
+        guard statCards.count == 4 else { return }
+        statCards[0].configure(number: viewModel.bestPeriod)
+        statCards[1].configure(number: viewModel.idealDays)
+        statCards[2].configure(number: viewModel.completedTrackers)
+        statCards[3].configure(number: viewModel.averageValue)
+    }
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
-        
-        if let stackView = statStackView {
-            NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 77),
-                stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                backgroundLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                backgroundLogo.heightAnchor.constraint(equalToConstant: 80),
-                backgroundLogo.widthAnchor.constraint(equalToConstant: 80),
-                backgroundLogo.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 246),
-                
-                underLogoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                underLogoLabel.topAnchor.constraint(equalTo: backgroundLogo.bottomAnchor, constant: 8)
-            ])
-        }
+
+        statsTopConstraint = statStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 77)
+        NSLayoutConstraint.activate([
+            statsTopConstraint,
+            statStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            statStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+
+        placeholderTopConstraint = backgroundLogo.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 246)
+        NSLayoutConstraint.activate([
+            backgroundLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            backgroundLogo.heightAnchor.constraint(equalToConstant: 80),
+            backgroundLogo.widthAnchor.constraint(equalToConstant: 80),
+            placeholderTopConstraint,
+            underLogoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            underLogoLabel.topAnchor.constraint(equalTo: backgroundLogo.bottomAnchor, constant: 8)
+        ])
+    }
+
+    private func updateViews() {
+        let hasStats = viewModel.hasStatistics
+        statStackView.isHidden = !hasStats
+        backgroundLogo.isHidden = hasStats
+        underLogoLabel.isHidden = hasStats
     }
 }
+

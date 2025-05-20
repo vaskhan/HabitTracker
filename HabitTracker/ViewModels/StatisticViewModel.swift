@@ -78,7 +78,10 @@ extension Date {
     }
     
     func addingDays(_ days: Int) -> Date {
-        Calendar.current.date(byAdding: .day, value: days, to: self)!
+        guard let newDate = Calendar.current.date(byAdding: .day, value: days, to: self) else {
+            return self
+        }
+        return newDate
     }
     
     func dayOfWeek() -> DayOfWeek {

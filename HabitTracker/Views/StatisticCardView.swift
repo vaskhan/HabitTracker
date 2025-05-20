@@ -77,4 +77,9 @@ final class StatisticCardView: UIView {
         shapeLayer.fillRule = .evenOdd
         shapeLayer.fillColor = UIColor.black.cgColor
     }
+    
+    func configure(number: Int) {
+        numberLabel.text = "\(number)"
+    }
+
 }

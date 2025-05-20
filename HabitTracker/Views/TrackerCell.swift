@@ -24,7 +24,7 @@ final class TrackerCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SFPro-Medium", size: 12)
-        label.textColor = .whiteDay
+        label.textColor = .white
         label.numberOfLines = 2
         return label
     }()
