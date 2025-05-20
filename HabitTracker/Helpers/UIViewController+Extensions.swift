@@ -34,15 +34,11 @@ extension UIViewController {
 }
 
 extension UIView {
-    func findTextField() -> UITextField? {
+    @discardableResult
+    func findFirstTextFieldRecursively() -> UITextField? {
         if let textField = self as? UITextField {
             return textField
         }
-        for subview in subviews {
-            if let found = subview.findTextField() {
-                return found
-            }
-        }
-        return nil
+        return subviews.lazy.compactMap { $0.findFirstTextFieldRecursively() }.first
     }
 }

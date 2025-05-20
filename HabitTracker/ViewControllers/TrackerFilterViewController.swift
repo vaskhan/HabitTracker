@@ -18,7 +18,7 @@ final class TrackerFilterViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.filters
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -34,7 +34,7 @@ final class TrackerFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupUI()
     }
     

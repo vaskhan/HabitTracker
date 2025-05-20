@@ -23,25 +23,9 @@ final class TrackerStore {
         ]
         let coreDataObjects = (try? context.fetch(request)) ?? []
         
-        let pinnedTrackers: [Tracker] = coreDataObjects
+        let pinnedTrackers = coreDataObjects
             .filter { $0.isPinned }
-            .compactMap { core in
-                guard
-                    let id = core.id,
-                    let name = core.name,
-                    let emoji = core.emoji,
-                    let colorHex = core.color
-                else { return nil }
-                let schedule = core.schedule as? [DayOfWeek] ?? []
-                return Tracker(
-                    id: id,
-                    name: name,
-                    color: UIColor(hex: colorHex),
-                    emoji: emoji,
-                    schedule: schedule,
-                    isPinned: true
-                )
-            }
+            .compactMap(makeTracker)
         
         var result: [TrackerCategory] = []
         if !pinnedTrackers.isEmpty {
@@ -49,28 +33,12 @@ final class TrackerStore {
         }
         
         let grouped = Dictionary(grouping: coreDataObjects.filter { !$0.isPinned }) { $0.category?.title ?? "Без категории" }
-        
         let sortedCategoryTitles = grouped.keys.sorted { $0.localizedCompare($1) == .orderedAscending }
         
         for title in sortedCategoryTitles {
             guard let trackersCore: [TrackerCoreData] = grouped[title] else { continue }
-            let trackers: [Tracker] = trackersCore.compactMap { core in
-                guard
-                    let id = core.id,
-                    let name = core.name,
-                    let emoji = core.emoji,
-                    let colorHex = core.color
-                else { return nil }
-                let schedule = core.schedule as? [DayOfWeek] ?? []
-                return Tracker(
-                    id: id,
-                    name: name,
-                    color: UIColor(hex: colorHex),
-                    emoji: emoji,
-                    schedule: schedule,
-                    isPinned: false
-                )
-            }
+            let trackers = trackersCore.compactMap(makeTracker)
+            
             if !trackers.isEmpty {
                 result.append(TrackerCategory(title: title, trackers: trackers))
             }
@@ -78,6 +46,25 @@ final class TrackerStore {
         return result
     }
     
+    private func makeTracker(from core: TrackerCoreData) -> Tracker? {
+        guard
+            let id = core.id,
+            let name = core.name,
+            let emoji = core.emoji,
+            let colorHex = core.color
+        else { return nil }
+        
+        let schedule = core.schedule as? [DayOfWeek] ?? []
+        
+        return Tracker(
+            id: id,
+            name: name,
+            color: UIColor(hex: colorHex),
+            emoji: emoji,
+            schedule: schedule,
+            isPinned: core.isPinned
+        )
+    }
     
     func addTracker(id: UUID, name: String, emoji: String, colorHex: String, schedule: [DayOfWeek], category: TrackerCategoryCoreData) {
         let tracker = TrackerCoreData(context: context)
@@ -94,47 +81,57 @@ final class TrackerStore {
     func updatePinState(for id: UUID, isPinned: Bool) {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        if let tracker = try? context.fetch(request).first {
-            tracker.isPinned = isPinned
-            saveContext()
+        do {
+            if let tracker = try context.fetch(request).first {
+                tracker.isPinned = isPinned
+                saveContext()
+            }
+        } catch {
+            print("Ошибка при обновлении состояния pin для трекера \(id): \(error)")
         }
     }
-    
+
     func deleteTracker(for id: UUID) {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        if let tracker = try? context.fetch(request).first {
-            context.delete(tracker)
-            saveContext()
+        do {
+            if let tracker = try context.fetch(request).first {
+                context.delete(tracker)
+                saveContext()
+            }
+        } catch {
+            print("Ошибка при удалении трекера \(id): \(error)")
         }
     }
-    
+
     func updateTracker(_ tracker: Tracker, newCategory: TrackerCategoryCoreData?) {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
-
-        if let existing = try? context.fetch(request).first {
-            existing.name = tracker.name
-            existing.emoji = tracker.emoji
-            existing.color = tracker.color.toHexString()
-            existing.schedule = tracker.schedule as NSObject
-            existing.isPinned = tracker.isPinned
-            
-            if let newCategory = newCategory {
-                existing.category = newCategory
+        do {
+            if let existing = try context.fetch(request).first {
+                existing.name = tracker.name
+                existing.emoji = tracker.emoji
+                existing.color = tracker.color.toHexString()
+                existing.schedule = tracker.schedule as NSObject
+                existing.isPinned = tracker.isPinned
+                
+                if let newCategory = newCategory {
+                    existing.category = newCategory
+                }
+                
+                saveContext()
             }
-
-            saveContext()
+        } catch {
+            print("Ошибка при обновлении трекера \(tracker.id): \(error)")
         }
     }
-
     
     func trackerExists(withId id: UUID) -> Bool {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         return (try? context.count(for: request)) ?? 0 > 0
     }
-
+    
     func saveContext() {
         guard context.hasChanges else { return }
         do {

@@ -32,7 +32,7 @@ final class TrackerCell: UICollectionViewCell {
     private let daysLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
     
@@ -40,7 +40,7 @@ final class TrackerCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         let image = UIImage(named: "buttonPlus")?.withRenderingMode(.alwaysOriginal)
         button.setImage(image, for: .normal)
-        button.backgroundColor = .whiteDay
+        button.backgroundColor = .whiteDayNew
         button.layer.cornerRadius = 17
         button.clipsToBounds = true
         return button
@@ -100,7 +100,7 @@ final class TrackerCell: UICollectionViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
         let icon = UIImage(systemName: iconName, withConfiguration: config)
         plusButton.setImage(icon, for: .normal)
-        plusButton.tintColor = .whiteDay
+        plusButton.tintColor = .whiteDayNew
         plusButton.backgroundColor = tracker.color.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
         
         pinImageView.isHidden = !tracker.isPinned
@@ -115,7 +115,7 @@ final class TrackerCell: UICollectionViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
         let icon = UIImage(systemName: iconName, withConfiguration: config)
         plusButton.setImage(icon, for: .normal)
-        plusButton.tintColor = .whiteDay
+        plusButton.tintColor = .whiteDayNew
         plusButton.backgroundColor = cardView.backgroundColor?.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
     }
     

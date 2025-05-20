@@ -16,7 +16,7 @@ final class EditCategoryViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.editCategory
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -24,7 +24,7 @@ final class EditCategoryViewController: UIViewController {
     private let nameField: UITextField = {
         let field = UITextField()
         field.placeholder = L10n.categoryCreatePlaceholder
-        field.textColor = .blackDay
+        field.textColor = .blackDayNew
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
@@ -54,7 +54,7 @@ final class EditCategoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupLayout()
         setupActions()
         enableHideKeyboardOnTap()
@@ -92,7 +92,7 @@ final class EditCategoryViewController: UIViewController {
     @objc private func textFieldChanged() {
         let isFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         createButton.isEnabled = isFilled
-        createButton.backgroundColor = isFilled ? .blackDay : .grayText
+        createButton.backgroundColor = isFilled ? .blackDayNew : .grayText
         
         let textColorName = isFilled ? "whiteDay" : "justWhite"
         let textColor = UIColor(named: textColorName)

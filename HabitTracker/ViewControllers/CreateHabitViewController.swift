@@ -38,7 +38,7 @@ final class CreateHabitViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.newHabitButton
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -46,7 +46,7 @@ final class CreateHabitViewController: UIViewController {
     private let nameField: UITextField = {
         let field = UITextField()
         field.placeholder = L10n.trackerNamePlaceholder
-        field.textColor = .blackDay
+        field.textColor = .blackDayNew
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
@@ -97,7 +97,7 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupUI()
         setupActions()
         
@@ -225,7 +225,7 @@ final class CreateHabitViewController: UIViewController {
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         
         createButton.isEnabled = nameFilled && categoryChosen && scheduleChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .grayText
+        createButton.backgroundColor = createButton.isEnabled ? .blackDayNew : .grayText
         
         let textColorName = createButton.isEnabled ? "whiteDay" : "justWhite"
         let textColor = UIColor(named: textColorName)
@@ -318,7 +318,7 @@ final class CreateOptionRowView: UIView {
         
         titleLabel.text = title
         titleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        titleLabel.textColor = .blackDay
+        titleLabel.textColor = .blackDayNew
         
         subtitleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
         subtitleLabel.textColor = .grayText

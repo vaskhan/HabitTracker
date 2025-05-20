@@ -12,19 +12,36 @@ import Testing
 
 final class TrackerScreenSnapshotTests: XCTestCase {
     
-    func testTrackerScreenForLightAndDarkMode() {
-        let container = DependencyInjectionContainer()
-        let vc = container.makeTrackerScreenController(statisticsCallback: { _ in })
-        let nav = UINavigationController(rootViewController: vc)
+    // MARK: - Setup
+    private var container: DependencyInjectionContainer!
+    private var navigationController: UINavigationController!
+    
+    override func setUp() {
+        super.setUp()
+        container = DependencyInjectionContainer()
+        let trackerVC = container.makeTrackerScreenController(statisticsCallback: { _ in })
+        navigationController = UINavigationController(rootViewController: trackerVC)
+       
+        _ = navigationController.view
         
-        if let trackerVC = vc as? TrackerScreenController {
-            trackerVC.viewModel.loadTrackers()
-        }
-        
-        assertSnapshot(of: nav, as: .image(on: .iPhone13ProMax(.portrait), traits: UITraitCollection(userInterfaceStyle: .dark)))
-        assertSnapshot(of: nav, as: .image(on: .iPhone13ProMax(.portrait), traits: UITraitCollection(userInterfaceStyle: .light)))
+        (trackerVC as? TrackerScreenController)?.viewModel.loadTrackers()
     }
     
+    // MARK: - Tests
+    func test_trackerScreen_lightMode() {
+        assertSnapshot(
+            of: navigationController,
+            as: .image(on: .iPhone13ProMax(.portrait), traits: .init(userInterfaceStyle: .light))
+        )
+    }
+    
+    func test_trackerScreen_darkMode() {
+        assertSnapshot(
+            of: navigationController,
+            as: .image(on: .iPhone13ProMax(.portrait), traits: .init(userInterfaceStyle: .dark))
+        )
+    }
 }
+
 
 

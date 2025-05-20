@@ -26,7 +26,7 @@ final class CreateEventViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = L10n.newEventButton
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textAlignment = .center
         return label
@@ -79,7 +79,7 @@ final class CreateEventViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupUI()
         updateCategoryUI()
         updateCreateButtonState()
@@ -184,7 +184,7 @@ final class CreateEventViewController: UIViewController {
         let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         createButton.isEnabled = nameFilled && categoryChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .grayText
+        createButton.backgroundColor = createButton.isEnabled ? .blackDayNew : .grayText
         
         let textColorName = createButton.isEnabled ? "whiteDay" : "justWhite"
         let textColor = UIColor(named: textColorName)

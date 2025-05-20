@@ -23,9 +23,9 @@ final class ScheduleViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.doneButton, for: .normal)
-        button.setTitleColor(.whiteDay, for: .normal)
+        button.setTitleColor(.whiteDayNew, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        button.backgroundColor = .blackDay
+        button.backgroundColor = .blackDayNew
         button.layer.cornerRadius = 16
         return button
     }()
@@ -34,14 +34,14 @@ final class ScheduleViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.schedule
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         
         setupUI()
     }

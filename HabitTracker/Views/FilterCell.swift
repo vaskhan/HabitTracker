@@ -23,7 +23,7 @@ final class FilterCell: UITableViewCell {
     
     private func setupUI() {
         titleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        titleLabel.textColor = .blackDay
+        titleLabel.textColor = .blackDayNew
         
         separator.backgroundColor = .grayText
         checkmarkImageView.image = UIImage(systemName: "checkmark")

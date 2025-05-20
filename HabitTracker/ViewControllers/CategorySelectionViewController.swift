@@ -17,7 +17,7 @@ final class CategorySelectionViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.categoryLabel
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -32,7 +32,7 @@ final class CategorySelectionViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.categoryListDescription
         label.font = UIFont(name: "SFPro-Medium", size: 12)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         label.numberOfLines = 2
         return label
@@ -41,8 +41,8 @@ final class CategorySelectionViewController: UIViewController {
     private let addCategoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.categoryAddButton, for: .normal)
-        button.backgroundColor = .blackDay
-        button.setTitleColor(.whiteDay, for: .normal)
+        button.backgroundColor = .blackDayNew
+        button.setTitleColor(.whiteDayNew, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -59,7 +59,7 @@ final class CategorySelectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         
         setupUI()
         
@@ -112,7 +112,7 @@ final class CategorySelectionViewController: UIViewController {
         let isEmpty = viewModel.numberOfCategories == 0
         backLogo.isHidden = !isEmpty
         underLogoLabel.isHidden = !isEmpty
-        tableView.isHidden = isEmpty == true ? true : false
+        tableView.isHidden = isEmpty
         tableView.reloadData()
     }
     

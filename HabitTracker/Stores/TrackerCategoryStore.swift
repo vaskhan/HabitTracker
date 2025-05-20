@@ -62,10 +62,11 @@ final class TrackerCategoryStore {
         let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "category == %@", category)
 
-        if let trackers = try? context.fetch(request) {
-            for tracker in trackers {
-                context.delete(tracker)
-            }
+        do {
+            let trackers = try context.fetch(request)
+            trackers.forEach { context.delete($0) }
+        } catch {
+            print("Ошибка при получении трекеров для удаления категории: \(error)")
         }
 
         context.delete(category)

@@ -43,7 +43,7 @@ final class EditHabitViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.newHabitButton
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -51,7 +51,7 @@ final class EditHabitViewController: UIViewController {
     private let counterLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SFPro-Bold", size: 32)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
@@ -59,7 +59,7 @@ final class EditHabitViewController: UIViewController {
     private let nameField: UITextField = {
         let field = UITextField()
         field.placeholder = L10n.trackerNamePlaceholder
-        field.textColor = .blackDay
+        field.textColor = .blackDayNew
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
@@ -110,7 +110,7 @@ final class EditHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupUI()
         setupActions()
         
@@ -338,15 +338,20 @@ final class EditHabitViewController: UIViewController {
     }
     
     private func updateCreateButtonState() {
-        let nameFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let nameFilled = isValidTitle(nameField.text)
         let categoryChosen = selectedCategory != nil
         let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         let scheduleValid = editingTracker?.schedule.isEmpty == true || !selectedSchedule.isEmpty
         saveButton.isEnabled = nameFilled && categoryChosen && scheduleValid && emojiChosen && colorChosen
-        saveButton.backgroundColor = saveButton.isEnabled ? .blackDay : .grayText
+        saveButton.backgroundColor = saveButton.isEnabled ? .blackDayNew : .grayText
         let textColorName = saveButton.isEnabled ? "whiteDay" : "justWhite"
         let textColor = UIColor(named: textColorName)
         saveButton.setTitleColor(textColor, for: .normal)
+    }
+    
+    private func isValidTitle(_ text: String?) -> Bool {
+        guard let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines) else { return false }
+        return !trimmed.isEmpty
     }
 }

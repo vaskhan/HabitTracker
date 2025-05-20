@@ -24,17 +24,17 @@ final class StatisticCardView: UIView {
     }
     
     private func setupUI(number: Int, description: String) {
-        backgroundColor = .whiteDay
+        backgroundColor = .whiteDayNew
         layer.cornerRadius = 16
         layer.masksToBounds = true
         
         numberLabel.font = UIFont(name: "SFPro-Bold", size: 34)
         numberLabel.text = "\(number)"
-        numberLabel.textColor = .blackDay
+        numberLabel.textColor = .blackDayNew
         
         descriptionLabel.font = UIFont(name: "SFPro-Medium", size: 12)
         descriptionLabel.text = description
-        descriptionLabel.textColor = .blackDay
+        descriptionLabel.textColor = .blackDayNew
         
         let stack = UIStackView(arrangedSubviews: [numberLabel, descriptionLabel])
         stack.axis = .vertical

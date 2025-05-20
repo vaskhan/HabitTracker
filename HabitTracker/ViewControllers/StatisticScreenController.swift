@@ -19,7 +19,7 @@ final class StatisticScreenController: UIViewController {
         let title = UILabel()
         title.text = L10n.statistic
         title.font = UIFont(name: "SFPro-Bold", size: 34)
-        title.textColor = .blackDay
+        title.textColor = .blackDayNew
         return title
     }()
     
@@ -33,7 +33,7 @@ final class StatisticScreenController: UIViewController {
         let label = UILabel()
         label.text = L10n.nothingToAnalyze
         label.font = UIFont(name: "SFPro-Medium", size: 12)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
 
@@ -48,7 +48,7 @@ final class StatisticScreenController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupElements()
         setupConstraints()
         updateViews()

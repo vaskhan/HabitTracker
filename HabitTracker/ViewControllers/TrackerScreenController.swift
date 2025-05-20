@@ -16,7 +16,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     private let addTrackerButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "buttonAddingLogo")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .blackDay
+        button.tintColor = .blackDayNew
         return button
     }()
     
@@ -32,7 +32,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         let title = UILabel()
         title.text = L10n.trackers
         title.font = UIFont(name: "SFPro-Bold", size: 34)
-        title.textColor = .blackDay
+        title.textColor = .blackDayNew
         return title
     }()
     
@@ -64,7 +64,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         let label = UILabel()
         label.text = L10n.baseScreenPrompt
         label.font = UIFont(name: "SFPro-Medium", size: 12)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
     
@@ -87,7 +87,6 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         button.setTitle(L10n.filters, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
         button.backgroundColor = .blueSwitch
-        button.setTitleColor(.systemRed, for: .selected)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -107,7 +106,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
         let label = UILabel()
         label.text = L10n.nothingFound
         label.font = UIFont(name: "SFPro-Medium", size: 12)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         label.isHidden = true
         return label
@@ -132,7 +131,7 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .whiteDay
+        view.backgroundColor = .whiteDayNew
         setupElements()
         
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
@@ -304,10 +303,6 @@ final class TrackerScreenController: UIViewController, UICollectionViewDelegate 
     
     private func updateFilterButtonState() {
         filterButton.isHidden = !viewModel.hasAnyTrackers(for: currentDate)
-        filterButton.setTitleColor(
-            viewModel.currentFilter == .all ? .white : .systemRed,
-            for: .normal
-        )
     }
 }
 

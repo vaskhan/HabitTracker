@@ -21,9 +21,7 @@ final class AnalyticsService {
             params["item"] = item
         }
 
-        print("AppMetrica Event:", params)
         YMMYandexMetrica.reportEvent("user_event", parameters: params, onFailure: { error in
-            print("AppMetrica Error:", error.localizedDescription)
         })
     }
 }
