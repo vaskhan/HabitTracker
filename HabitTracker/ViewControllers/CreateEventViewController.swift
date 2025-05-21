@@ -35,7 +35,7 @@ final class CreateEventViewController: UIViewController {
     private let nameField: UITextField = {
         let field = UITextField()
         field.placeholder = L10n.trackerNamePlaceholder
-        field.textColor = .grayText
+        field.textColor = .blackDayNew
         field.font = UIFont(name: "SFPro-Regular", size: 17)
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
