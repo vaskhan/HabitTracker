@@ -1,0 +1,84 @@
+/* 
+  Localizable.strings (Spanish)
+  HabitTracker
+
+  Created by Василий Ханин on 08.05.2025.
+  
+*/
+
+// MARK: - Días de la semana y horario
+"mondayFull" = "Lunes";
+"tuesdayFull" = "Martes";
+"wednesdayFull" = "Miércoles";
+"thursdayFull" = "Jueves";
+"fridayFull" = "Viernes";
+"saturdayFull" = "Sábado";
+"sundayFull" = "Domingo";
+
+"mondayShort" = "Lun";
+"tuesdayShort" = "Mar";
+"wednesdayShort" = "Mié";
+"thursdayShort" = "Jue";
+"fridayShort" = "Vie";
+"saturdayShort" = "Sáb";
+"sundayShort" = "Dom";
+
+"schedule" = "Horario";
+"everyDay" = "Todos los días";
+
+// MARK: - Categorías
+"categoryTitleMissing" = "Sin categoría";
+"categoryLabel" = "Categoría";
+"categoryListDescription" = "Los hábitos y eventos se pueden\nagrupar por significado";
+"categoryAddButton" = "Agregar categoría";
+"categoryCreateTitle" = "Nueva categoría";
+"categoryCreatePlaceholder" = "Ingresa el nombre de la categoría";
+"categoryCreateButton" = "Crear";
+
+// MARK: - Crear rastreador
+"newEventButton" = "Nuevo evento irregular";
+"trackerNamePlaceholder" = "Ingresa el nombre del rastreador";
+"cancelButton" = "Cancelar";
+"trackerNameMissing" = "Sin nombre";
+"newHabitButton" = "Nuevo hábito";
+"createTrackerTitle" = "Crear rastreador";
+"habit" = "Hábito";
+"event" = "Evento irregular";
+"doneButton" = "Hecho";
+
+// MARK: - Onboarding
+"onboardingTitleBlue" = "Haz seguimiento solo de lo que quieras";
+"onboardingButton" = "¡Esto sí es tecnología!";
+"onboardingTitleRed" = "Incluso si no es yoga o litros de agua";
+
+// MARK: - Pantalla principal
+"trackers" = "Rastreadores";
+"search" = "Buscar";
+"baseScreenPrompt" = "¿Qué deseas rastrear?";
+"statistic" = "Estadísticas";
+
+// MARK: - Colores
+"color" = "Color";
+
+// MARK: - ContextMenu + Editing
+"save" = "Guardar";
+"edit_habit" = "Editar hábito";
+"pin" = "Fijar";
+"unpin" = "Desfijar";
+"edit" = "Editar";
+"delete" = "Eliminar";
+"confirmDeleteTracker" = "¿Estás seguro de que quieres eliminar este rastreador?";
+
+"all_trackers" = "Todos los trackers";
+"trackers_today" = "Trackers para hoy";
+"completed" = "Completados";
+"uncompleted" = "No completados";
+"edit_category" = "Editar categoría";
+"nothing_to_analyze" = "Nada que analizar por ahora";
+"best_period" = "Mejor período";
+"ideal_days" = "Días ideales";
+"trackers_completed" = "Trackers completados";
+"average_value" = "Valor promedio";
+"filters" = "Filtros";
+"nothing_found" = "Nada encontrado";
+"confirm_delete_category" = "¿Realmente quieres eliminar esta categoría?";

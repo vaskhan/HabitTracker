@@ -13,17 +13,17 @@ final class CreateCategoryViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новая категория"
+        label.text = L10n.categoryCreateTitle
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
     
     private let nameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Введите название категории"
-        field.textColor = .blackDay
+        field.placeholder = L10n.categoryCreatePlaceholder
+        field.textColor = .blackDayNew
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
@@ -33,8 +33,8 @@ final class CreateCategoryViewController: UIViewController {
     
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.doneButton, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.backgroundColor = .grayText
         button.layer.cornerRadius = 16
@@ -44,7 +44,7 @@ final class CreateCategoryViewController: UIViewController {
  
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDayNew
         setupLayout()
         setupActions()
         enableHideKeyboardOnTap()
@@ -80,7 +80,11 @@ final class CreateCategoryViewController: UIViewController {
     @objc private func textFieldChanged() {
         let isFilled = !(nameField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         createButton.isEnabled = isFilled
-        createButton.backgroundColor = isFilled ? .blackDay : .grayText
+        createButton.backgroundColor = isFilled ? .blackDayNew : .grayText
+        
+        let textColorName = isFilled ? "whiteDayNew" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     @objc private func createTapped() {

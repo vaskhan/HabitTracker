@@ -25,8 +25,8 @@ final class CreateEventViewController: UIViewController {
     // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новое нерегулярное событие"
-        label.textColor = .blackDay
+        label.text = L10n.newEventButton
+        label.textColor = .blackDayNew
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textAlignment = .center
         return label
@@ -34,8 +34,8 @@ final class CreateEventViewController: UIViewController {
     
     private let nameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Введите название трекера"
-        field.textColor = .grayText
+        field.placeholder = L10n.trackerNamePlaceholder
+        field.textColor = .blackDayNew
         field.font = UIFont(name: "SFPro-Regular", size: 17)
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
@@ -44,7 +44,7 @@ final class CreateEventViewController: UIViewController {
         return field
     }()
     
-    private let categoryButtonView = CreateOptionRowView(title: "Категория")
+    private let categoryButtonView = CreateOptionRowView(title: L10n.categoryLabel)
     
     private let categoryContainer: UIView = {
         let view = UIView()
@@ -55,7 +55,7 @@ final class CreateEventViewController: UIViewController {
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(L10n.cancelButton, for: .normal)
         button.setTitleColor(.redYPcolor, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.borderWidth = 1
@@ -67,8 +67,8 @@ final class CreateEventViewController: UIViewController {
     
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.categoryCreateButton, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         button.backgroundColor = .grayText
@@ -79,7 +79,7 @@ final class CreateEventViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDayNew
         setupUI()
         updateCategoryUI()
         updateCreateButtonState()
@@ -184,14 +184,18 @@ final class CreateEventViewController: UIViewController {
         let emojiChosen = emojiAndColorPicker.selectedEmoji != nil
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         createButton.isEnabled = nameFilled && categoryChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .gray
+        createButton.backgroundColor = createButton.isEnabled ? .blackDayNew : .grayText
+        
+        let textColorName = createButton.isEnabled ? "whiteDayNew" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     @objc private func categoryTapped() {
         guard let viewModel = categoryViewModel else { return }
         let categoryVC = CategorySelectionViewController(viewModel: viewModel)
         categoryVC.onCategorySelected = { [weak self] selectedCategory in
-            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? "Без названия", trackers: [])
+            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? L10n.trackerNameMissing, trackers: [])
             self?.updateCategoryUI()
             self?.updateCreateButtonState()
         }

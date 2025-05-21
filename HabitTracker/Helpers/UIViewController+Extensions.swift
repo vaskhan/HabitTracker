@@ -32,3 +32,13 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+extension UIView {
+    @discardableResult
+    func findFirstTextFieldRecursively() -> UITextField? {
+        if let textField = self as? UITextField {
+            return textField
+        }
+        return subviews.lazy.compactMap { $0.findFirstTextFieldRecursively() }.first
+    }
+}

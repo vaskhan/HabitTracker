@@ -26,7 +26,7 @@ final class ScheduleCell: UITableViewCell {
     
     private func setupUI() {
         dayLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        dayLabel.textColor = .blackDay
+        dayLabel.textColor = .blackDayNew
         
         toggle.onTintColor = .blueSwitch
         

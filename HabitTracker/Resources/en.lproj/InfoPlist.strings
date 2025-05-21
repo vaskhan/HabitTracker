@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  HabitTracker
+
+  Created by Василий Ханин on 10.05.2025.
+  
+*/
+
+"CFBundleDisplayName" = "Habit Tracker";

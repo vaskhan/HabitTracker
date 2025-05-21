@@ -19,25 +19,25 @@ enum DayOfWeek: Int, CaseIterable, Codable {
 extension DayOfWeek {
     var shortNameDay: String {
         switch self {
-        case .monday: return "Пн"
-        case .tuesday: return "Вт"
-        case .wednesday: return "Ср"
-        case .thursday: return "Чт"
-        case .friday: return "Пт"
-        case .saturday: return "Сб"
-        case .sunday: return "Вс"
+        case .monday: return L10n.mondayShort
+        case .tuesday: return L10n.tuesdayShort
+        case .wednesday: return L10n.wednesdayShort
+        case .thursday: return L10n.thursdayShort
+        case .friday: return L10n.fridayShort
+        case .saturday: return L10n.saturdayShort
+        case .sunday: return L10n.sundayShort
         }
     }
 
     var fullNameDay: String {
         switch self {
-        case .monday: return "Понедельник"
-        case .tuesday: return "Вторник"
-        case .wednesday: return "Среда"
-        case .thursday: return "Четверг"
-        case .friday: return "Пятница"
-        case .saturday: return "Суббота"
-        case .sunday: return "Воскресенье"
+        case .monday: return L10n.mondayFull
+        case .tuesday: return L10n.tuesdayFull
+        case .wednesday: return L10n.wednesdayFull
+        case .thursday: return L10n.thursdayFull
+        case .friday: return L10n.fridayFull
+        case .saturday: return L10n.saturdayFull
+        case .sunday: return L10n.sundayFull
         }
     }
 }

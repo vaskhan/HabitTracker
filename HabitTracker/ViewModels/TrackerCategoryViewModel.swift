@@ -9,7 +9,7 @@ import Foundation
 
 final class TrackerCategoryViewModel {
     
-    private let categoryStore: TrackerCategoryStore
+    let categoryStore: TrackerCategoryStore
 
     var onCategoriesUpdated: (([TrackerCategoryCoreData]) -> Void)?
 

@@ -24,15 +24,15 @@ final class EmojiAndColorPickerView: UIView {
         let label = UILabel()
         label.text = "Emoji"
         label.font = UIFont(name: "SFPro-Bold", size: 19)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
     
     private let colorLabel: UILabel = {
         let label = UILabel()
-        label.text = "Цвет"
+        label.text = L10n.color
         label.font = UIFont(name: "SFPro-Bold", size: 19)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
     
