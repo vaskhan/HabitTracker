@@ -25,8 +25,8 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Создание трекера"
-        label.textColor = .blackDay
+        label.text = L10n.createTrackerTitle
+        label.textColor = .blackDayNew
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         label.textAlignment = .center
         return label
@@ -34,9 +34,9 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Привычка", for: .normal)
-        button.backgroundColor = .blackDay
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.habit, for: .normal)
+        button.backgroundColor = .blackDayNew
+        button.setTitleColor(.whiteDayNew, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -44,9 +44,9 @@ final class TrackerSelectionViewController: UIViewController {
     
     private let eventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Нерегулярные событие", for: .normal)
-        button.backgroundColor = .blackDay
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.event, for: .normal)
+        button.backgroundColor = .blackDayNew
+        button.setTitleColor(.whiteDayNew, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         return button
@@ -54,7 +54,7 @@ final class TrackerSelectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDayNew
         setupLayout()
         habitButton.addTarget(self, action: #selector(habitTapped), for: .touchUpInside)
         eventButton.addTarget(self, action: #selector(eventTapped), for: .touchUpInside)

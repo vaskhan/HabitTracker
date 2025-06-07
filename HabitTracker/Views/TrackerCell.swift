@@ -32,7 +32,7 @@ final class TrackerCell: UICollectionViewCell {
     private let daysLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         return label
     }()
     
@@ -40,7 +40,7 @@ final class TrackerCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         let image = UIImage(named: "buttonPlus")?.withRenderingMode(.alwaysOriginal)
         button.setImage(image, for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = .whiteDayNew
         button.layer.cornerRadius = 17
         button.clipsToBounds = true
         return button
@@ -54,13 +54,21 @@ final class TrackerCell: UICollectionViewCell {
         return view
     }()
     
+    private let pinImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "pin.fill"))
+        imageView.tintColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(cardView)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         
-        [emojiLabel, titleLabel].forEach {
+        [emojiLabel, titleLabel, pinImageView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             cardView.addSubview($0)
         }
@@ -82,7 +90,9 @@ final class TrackerCell: UICollectionViewCell {
     func configure(with tracker: Tracker, completedDays: Int, isCompletedToday: Bool) {
         emojiLabel.text = tracker.emoji
         titleLabel.text = tracker.name
-        daysLabel.text = "\(completedDays) \(dayWord(for: completedDays))"
+        let format = NSLocalizedString("numberOfDays", comment: "")
+        let result = String.localizedStringWithFormat(format, completedDays)
+        daysLabel.text = result
         
         cardView.backgroundColor = tracker.color
         
@@ -90,39 +100,35 @@ final class TrackerCell: UICollectionViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
         let icon = UIImage(systemName: iconName, withConfiguration: config)
         plusButton.setImage(icon, for: .normal)
-        plusButton.tintColor = .white
+        plusButton.tintColor = .whiteDayNew
         plusButton.backgroundColor = tracker.color.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
+        
+        pinImageView.isHidden = !tracker.isPinned
     }
     
     func updateState(isCompletedToday: Bool, completedDays: Int) {
-        daysLabel.text = "\(completedDays) \(dayWord(for: completedDays))"
+        let format = NSLocalizedString("numberOfDays", comment: "")
+        let result = String.localizedStringWithFormat(format, completedDays)
+        daysLabel.text = result
         
         let iconName = isCompletedToday ? "checkmark" : "plus"
         let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
         let icon = UIImage(systemName: iconName, withConfiguration: config)
         plusButton.setImage(icon, for: .normal)
-        plusButton.tintColor = .white
+        plusButton.tintColor = .whiteDayNew
         plusButton.backgroundColor = cardView.backgroundColor?.withAlphaComponent(isCompletedToday ? 0.3 : 1.0)
     }
     
-    private func dayWord(for count: Int) -> String {
-        let remainderOfHundred = count % 100
-        let remainderOfTen = count % 10
-        
-        if remainderOfHundred >= 11 && remainderOfHundred <= 14 {
-            return "дней"
-        }
-        
-        switch remainderOfTen {
-        case 1:
-            return "день"
-        case 2, 3, 4:
-            return "дня"
-        default:
-            return "дней"
-        }
+    func targetedPreview() -> UITargetedPreview {
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        parameters.visiblePath = UIBezierPath(
+            roundedRect: cardView.bounds,
+            cornerRadius: cardView.layer.cornerRadius
+        )
+        return UITargetedPreview(view: cardView, parameters: parameters)
     }
-    
+
     // MARK: - Layout
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -146,7 +152,12 @@ final class TrackerCell: UICollectionViewCell {
             plusButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor),
             plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             plusButton.widthAnchor.constraint(equalToConstant: 34),
-            plusButton.heightAnchor.constraint(equalToConstant: 34)
+            plusButton.heightAnchor.constraint(equalToConstant: 34),
+            
+            pinImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
+            pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
+            pinImageView.widthAnchor.constraint(equalToConstant: 8),
+            pinImageView.heightAnchor.constraint(equalToConstant: 12)
         ])
     }
     

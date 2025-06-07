@@ -22,7 +22,7 @@ final class CategoryCell: UITableViewCell {
     
     private func setupUI() {
         titleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        titleLabel.textColor = .blackDay
+        titleLabel.textColor = .blackDayNew
         
         separator.backgroundColor = .grayText
         

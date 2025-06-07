@@ -22,26 +22,26 @@ final class ScheduleViewController: UIViewController {
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.doneButton, for: .normal)
+        button.setTitleColor(.whiteDayNew, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        button.backgroundColor = .blackDay
+        button.backgroundColor = .blackDayNew
         button.layer.cornerRadius = 16
         return button
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Расписание"
+        label.text = L10n.schedule
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDayNew
         
         setupUI()
     }

@@ -36,17 +36,17 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - UI
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Новая привычка"
+        label.text = L10n.newHabitButton
         label.font = UIFont(name: "SFPro-Medium", size: 16)
-        label.textColor = .blackDay
+        label.textColor = .blackDayNew
         label.textAlignment = .center
         return label
     }()
     
     private let nameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Введите название трекера"
-        field.textColor = .blackDay
+        field.placeholder = L10n.trackerNamePlaceholder
+        field.textColor = .blackDayNew
         field.backgroundColor = .fieldBackground.withAlphaComponent(0.3)
         field.layer.cornerRadius = 16
         field.setLeftPaddingPoints(16)
@@ -62,8 +62,8 @@ final class CreateHabitViewController: UIViewController {
         return view
     }()
     
-    private let categoryButtonView = CreateOptionRowView(title: "Категория")
-    private let scheduleButtonView = CreateOptionRowView(title: "Расписание")
+    private let categoryButtonView = CreateOptionRowView(title: L10n.categoryLabel)
+    private let scheduleButtonView = CreateOptionRowView(title: L10n.schedule)
     
     private let dividerView: UIView = {
         let view = UIView()
@@ -73,7 +73,7 @@ final class CreateHabitViewController: UIViewController {
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(L10n.cancelButton, for: .normal)
         button.setTitleColor(.redYPcolor, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.borderWidth = 1
@@ -85,8 +85,8 @@ final class CreateHabitViewController: UIViewController {
     
     private let createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle(L10n.categoryCreateButton, for: .normal)
+        button.setTitleColor(.justWhite, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         button.layer.cornerRadius = 16
         button.backgroundColor = .grayText
@@ -97,7 +97,7 @@ final class CreateHabitViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDayNew
         setupUI()
         setupActions()
         
@@ -225,14 +225,18 @@ final class CreateHabitViewController: UIViewController {
         let colorChosen = emojiAndColorPicker.selectedColor != nil
         
         createButton.isEnabled = nameFilled && categoryChosen && scheduleChosen && emojiChosen && colorChosen
-        createButton.backgroundColor = createButton.isEnabled ? .blackDay : .gray
+        createButton.backgroundColor = createButton.isEnabled ? .blackDayNew : .grayText
+        
+        let textColorName = createButton.isEnabled ? "whiteDayNew" : "justWhite"
+        let textColor = UIColor(named: textColorName)
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     private func updateScheduleUI() {
         if selectedSchedule.isEmpty {
             scheduleButtonView.updateSubtitle(nil)
         } else if selectedSchedule.count == DayOfWeek.allCases.count {
-            scheduleButtonView.updateSubtitle("Каждый день")
+            scheduleButtonView.updateSubtitle(L10n.everyDay)
         } else {
             let days = selectedSchedule
                 .map { $0.shortNameDay }
@@ -278,7 +282,7 @@ final class CreateHabitViewController: UIViewController {
         guard let viewModel = categoryViewModel else { return }
         let categoryVC = CategorySelectionViewController(viewModel: viewModel)
         categoryVC.onCategorySelected = { [weak self] selectedCategory in
-            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? "Без названия", trackers: [])
+            self?.selectedCategory = TrackerCategory(title: selectedCategory.title ?? L10n.trackerNameMissing, trackers: [])
             self?.updateCategoryUI()
             self?.updateCreateButtonState()
         }
@@ -314,7 +318,7 @@ final class CreateOptionRowView: UIView {
         
         titleLabel.text = title
         titleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
-        titleLabel.textColor = .blackDay
+        titleLabel.textColor = .blackDayNew
         
         subtitleLabel.font = UIFont(name: "SFPro-Regular", size: 17)
         subtitleLabel.textColor = .grayText
